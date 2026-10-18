@@ -1,0 +1,3115 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sunrise">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Debt Payoff Tracker — one payment at a time</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FBF1DC'/%3E%3Ccircle cx='32' cy='38' r='13' fill='%23F0B269'/%3E%3Crect x='10' y='42' width='44' height='3.4' rx='1.7' fill='%23C4643B'/%3E%3Cpath d='M14 42h36l-4-6H18z' fill='%233E8E6E' opacity='.85'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DEBT PAYOFF TRACKER — sunrise road edition
+   Design DNA from the gentle-planner family (original):
+   soft sunrise cream/terracotta/teal system, stitched cards,
+   pill nav, gentle motion. 13 sections, 5 accent moods.
+   ============================================================ */
+:root{
+  /* DEBT PAYOFF TRACKER — sunrise road (original palette) */
+  --bg:#FCF8F2;
+  --panel:#FFFFFF;
+  --panel2:#F8F1E7;
+  --ink:#45392E;
+  --ink2:#5C4B3C;
+  --muted:#8D7A67;
+  --faint:#B5A38F;
+  --line:#ECDFCE;
+  --hair:#F4EBDD;
+  --hair2:#E8DAC5;
+
+  --navy:#C4643B;                     /* sunrise terracotta — primary fills */
+  --navy-deep:#A84E2A;
+  --navy-soft:#F5CDB2;                /* apricot tint — bars & gradients    */
+
+  --mast1:#FDF3E6; --mast2:#FAE3CB;   /* masthead / hero tint gradient      */
+  --mast3:#F4D2AE;
+  --mast-ink:#7A4A28;
+
+  --gold:#D99A4E;                     /* warm gold accent (fills)           */
+  --gold-deep:#9A6A22;                /* warm accent (readable text)        */
+  --gold-soft:#F0D8AC;
+  --gold-pale:#FBF1DC;
+  --gold-line:#EFDFC0;
+
+  --oxb:#C0575B;                      /* muted red — debt / danger          */
+  --oxb-pale:#F9E7E7;
+  --sage:#3E8E6E;                     /* freedom teal-green — success/paid  */
+  --sage-pale:#DFF2E9;
+
+  --w1:#E3F0FA;  --w1a:#4A7BA6;
+  --w2:#FBE3EF;  --w2a:#C25E93;
+  --w3:#DFF2EF;  --w3a:#37796F;
+  --w4:#FDF0E3;  --w4a:#B3763F;
+  --w5:#EEF0FC;  --w5a:#7381C9;
+  --w6:#E4F4E0;  --w6a:#4E8A3F;
+
+  --track:#F0E4D4;
+  --dark:#FFFFFF;
+
+  /* derived tokens — re-pointed as a set by every mood below */
+  --raise:#FFFFFF;
+  --input:#FFFFFF;
+  --soft:#F6EEE2;
+  --soft-ink:#A6927C;
+  --strike:#C4B29C;
+  --phold:#D2C0A8;
+  --hand-ink:#AC9578;
+  --chk:#F5CDB2;
+  --sb:#EBDCC8; --sbh:#DDC9AE; --sbtrack:#F2E8D9;
+  --today:#FDF4E4;
+  --sel:#FBF0E1;
+  --dotgrid:rgba(196,100,59,.05);
+  --stitch:rgba(196,100,59,.10);
+  --focus:rgba(196,100,59,.45);
+  --chart-line:#C4643B;
+  --chart-dot:#C25E93;
+  --chart-grid:#F7F0E5;
+  --chart-lab:#B3A28C;
+  --chart-axis:#A7947C;
+  --agrad:#F5CDB2;
+
+  --brand:#C4643B;
+  --brand-pale:#FBEADF;
+
+  /* fixed pastel data palette (charts don't drift with moods) */
+  --pd1:#45789E; --pp1:#C3DDF0;      /* ocean blue   */
+  --pd2:#C25E7A; --pp2:#F3BCCB;      /* rose         */
+  --pd3:#3E8E6E; --pp3:#BFE5D6;      /* freedom teal */
+  --pd4:#9A6A22; --pp4:#F0DDB4;      /* honey        */
+  --pd5:#74639F; --pp5:#D9D2EE;      /* lilac        */
+  --pd6:#4E8A3F; --pp6:#CDE6BE;      /* leaf         */
+
+  --serif:'Libre Baskerville',Georgia,'Times New Roman',serif;
+  --sans:'Inter','Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+  --hand:'Caveat','Segoe Script','Comic Sans MS',cursive;
+
+  --shadow:0 1px 2px rgba(69,57,46,.06),0 10px 30px -18px rgba(69,57,46,.22);
+  --shadow-lift:0 2px 4px rgba(69,57,46,.07),0 16px 40px -20px rgba(69,57,46,.28);
+  --r:16px; --r-sm:11px;
+}
+html[data-theme="ocean"]{
+  --navy:#45789E; --navy-deep:#376380; --navy-soft:#C3DDF0;
+  --mast1:#EAF4FB; --mast2:#D4E8F5; --mast3:#BFDCEF;
+  --mast-ink:#33566F;
+  --brand:#45789E; --brand-pale:#E7F1F8;
+  --panel2:#F2F7FB;
+  --sel:#E9F2F9; --focus:rgba(69,120,158,.45);
+  --chart-line:#45789E; --chart-dot:#C25E7A; --agrad:#C3DDF0;
+  --bg:#F6FAFC; --line:#DCE8F1; --hair:#EAF2F8; --hair2:#D9E7F1;
+  --ink:#31465A; --ink2:#435A70; --muted:#7590A4; --faint:#A0B6C6;
+  --track:#E2EDF5; --soft:#EBF2F8; --soft-ink:#7E97AA;
+  --strike:#9FB4C4; --phold:#C0D2E0; --hand-ink:#8299AB;
+  --chk:#C3DDF0;
+  --sb:#CFE1EE; --sbh:#B9D1E4; --sbtrack:#E0EBF4;
+  --dotgrid:rgba(69,120,158,.05); --stitch:rgba(69,120,158,.10);
+  --chart-grid:#EBF3F8; --chart-lab:#9BAFBE; --chart-axis:#8BA0B0;
+}
+html[data-theme="meadow"]{
+  --navy:#4E8A3F; --navy-deep:#3F7031; --navy-soft:#CDE6BE;
+  --mast1:#EFF7E9; --mast2:#DCEECF; --mast3:#C8E3B4;
+  --mast-ink:#3D5C2E;
+  --brand:#4E8A3F; --brand-pale:#EAF4E2;
+  --panel2:#F4F9F0;
+  --sel:#EDF6E5; --focus:rgba(78,138,63,.45);
+  --chart-line:#4E8A3F; --chart-dot:#C25E7A; --agrad:#CDE6BE;
+  --bg:#F8FBF4; --line:#E0EBD6; --hair:#EDF4E4; --hair2:#DCE9CE;
+  --ink:#3A4C2E; --ink2:#4A5F3B; --muted:#7E9268; --faint:#ACBE97;
+  --track:#E7F0DA; --soft:#F0F6E8; --soft-ink:#8DA173;
+  --strike:#AEBE98; --phold:#CBD9B6; --hand-ink:#93A67C;
+  --chk:#CDE6BE;
+  --sb:#DAE9CC; --sbh:#C8DCB4; --sbtrack:#E9F2DF;
+  --dotgrid:rgba(78,138,63,.05); --stitch:rgba(78,138,63,.10);
+  --chart-grid:#F0F6E8; --chart-lab:#A3B28E; --chart-axis:#94A57F;
+}
+html[data-theme="lilac"]{
+  --navy:#74639F; --navy-deep:#5E4F87; --navy-soft:#D9D2EE;
+  --mast1:#F3EFFB; --mast2:#E4DCF6; --mast3:#D2C6EE;
+  --mast-ink:#4E4370;
+  --brand:#74639F; --brand-pale:#EFEBF8;
+  --panel2:#F7F5FB;
+  --sel:#F0ECF9; --focus:rgba(116,99,159,.45);
+  --chart-line:#74639F; --chart-dot:#C25E7A; --agrad:#D9D2EE;
+  --bg:#FAF8FD; --line:#E7E1F1; --hair:#F1EDF8; --hair2:#DFD8EE;
+  --ink:#423A56; --ink2:#524868; --muted:#8478A0; --faint:#ADA2C4;
+  --track:#EAE4F4; --soft:#F1EDF8; --soft-ink:#9186AC;
+  --strike:#B5AACB; --phold:#CEC4E0; --hand-ink:#9C90B8;
+  --chk:#D9D2EE;
+  --sb:#E0D9F0; --sbh:#D0C5E6; --sbtrack:#EEE9F7;
+  --dotgrid:rgba(116,99,159,.05); --stitch:rgba(116,99,159,.10);
+  --chart-grid:#F2EEF9; --chart-lab:#A99DBF; --chart-axis:#998DB1;
+}
+html[data-theme="dusk"]{
+  --navy:#5E6B78; --navy-deep:#4C5864; --navy-soft:#CBD5DD;
+  --mast1:#F1F4F6; --mast2:#E0E7EC; --mast3:#CBD5DD;
+  --mast-ink:#414E5A;
+  --brand:#5E6B78; --brand-pale:#E9EEF2;
+  --panel2:#F4F6F8;
+  --sel:#E9EEF2; --focus:rgba(94,107,120,.45);
+  --chart-line:#5E6B78; --chart-dot:#C25E7A; --agrad:#CBD5DD;
+  --bg:#F7F9FA; --line:#E1E7EB; --hair:#EBF0F3; --hair2:#DDE4E9;
+  --ink:#39454F; --ink2:#4C5A66; --muted:#7A8894; --faint:#A3AFB9;
+  --track:#E6ECF0; --soft:#EFF3F5; --soft-ink:#7E8C98;
+  --strike:#A6B2BC; --phold:#C5CFD7; --hand-ink:#8D9AA6;
+  --chk:#CBD5DD;
+  --sb:#D5DDE3; --sbh:#C0CAD2; --sbtrack:#E5EBEF;
+  --dotgrid:rgba(94,107,120,.05); --stitch:rgba(94,107,120,.10);
+  --chart-grid:#EDF1F4; --chart-lab:#9AA6B1; --chart-axis:#8B98A4;
+}
+
+/* ---------- base ---------- */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);background:var(--bg);color:var(--ink);
+  background-image:radial-gradient(var(--dotgrid) 1px,transparent 1.6px);
+  background-size:26px 26px;
+  font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+::selection{background:var(--sel);color:var(--ink)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--sb);border-radius:99px;border:2px solid var(--panel)}
+::-webkit-scrollbar-thumb:hover{background:var(--sbh)}
+
+/* ---------- masthead ribbon ---------- */
+.mast{
+  background:linear-gradient(115deg,var(--mast1) 0%,var(--mast2) 55%,var(--mast3) 100%);
+  color:var(--mast-ink);
+  padding:15px clamp(14px,3vw,36px);
+  border-bottom:3px double rgba(196,100,59,.4);
+}
+html[data-theme="ocean"] .mast{border-bottom-color:rgba(69,120,158,.4)}
+html[data-theme="meadow"] .mast{border-bottom-color:rgba(78,138,63,.4)}
+html[data-theme="lilac"] .mast{border-bottom-color:rgba(116,99,159,.4)}
+html[data-theme="dusk"] .mast{border-bottom-color:rgba(94,107,120,.4)}
+.mast-inner{max-width:1500px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.mast-brand{display:flex;align-items:center;gap:13px}
+.mast-emblem{
+  width:42px;height:42px;border-radius:12px;flex:0 0 auto;
+  background:rgba(255,255,255,.62);border:1px solid rgba(196,100,59,.4);
+  display:inline-flex;align-items:center;justify-content:center;
+}
+html[data-theme="ocean"] .mast-emblem{border-color:rgba(69,120,158,.4)}
+html[data-theme="meadow"] .mast-emblem{border-color:rgba(78,138,63,.4)}
+html[data-theme="lilac"] .mast-emblem{border-color:rgba(116,99,159,.4)}
+html[data-theme="dusk"] .mast-emblem{border-color:rgba(94,107,120,.4)}
+.mast-emblem svg{width:25px;height:25px;fill:none;stroke:var(--navy);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mast-brand h1{font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:.6px;color:var(--mast-ink);line-height:1.1}
+.mast-brand h1 em{font-style:italic;color:var(--gold-deep)}
+.mast-brand p{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--mast-ink);opacity:.62;margin-top:3px;font-weight:700}
+.mast-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.mast-date{font-size:10px;letter-spacing:1.8px;font-weight:700;text-transform:uppercase;color:var(--mast-ink);opacity:.75;background:rgba(255,255,255,.55);border:1px solid rgba(196,100,59,.3);border-radius:99px;padding:7px 14px;font-variant-numeric:tabular-nums}
+html[data-theme="ocean"] .mast-date{border-color:rgba(69,120,158,.3)}
+html[data-theme="meadow"] .mast-date{border-color:rgba(78,138,63,.3)}
+html[data-theme="lilac"] .mast-date{border-color:rgba(116,99,159,.3)}
+html[data-theme="dusk"] .mast-date{border-color:rgba(94,107,120,.3)}
+.theme-group{display:flex;align-items:center;gap:9px}
+.theme-group>span{font-size:9px;letter-spacing:2.2px;color:var(--mast-ink);opacity:.55;font-weight:700}
+.theme-dot{width:17px;height:17px;border-radius:50%;border:1px solid rgba(196,100,59,.28);position:relative;transition:transform .15s ease}
+.theme-dot:hover{transform:scale(1.15)}
+.theme-dot.active::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1.6px solid var(--navy);opacity:.9}
+.ghost-btn{
+  font-size:10.5px;font-weight:700;letter-spacing:1.6px;color:var(--mast-ink);
+  border:1px solid rgba(196,100,59,.3);border-radius:999px;padding:7px 15px;background:transparent;
+  transition:all .18s ease;text-transform:uppercase;
+}
+.ghost-btn:hover{background:rgba(255,255,255,.6)}
+.ghost-btn.confirm{color:#FFFFFF;background:var(--oxb);border-color:var(--oxb);letter-spacing:1px}
+
+/* ---------- pill nav ---------- */
+.pnav{position:sticky;top:0;z-index:40;background:rgba(252,248,242,.9);backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}
+html[data-theme="ocean"] .pnav{background:rgba(246,250,252,.9)}
+html[data-theme="meadow"] .pnav{background:rgba(248,251,244,.9)}
+html[data-theme="lilac"] .pnav{background:rgba(250,248,253,.9)}
+html[data-theme="dusk"] .pnav{background:rgba(247,249,250,.9)}
+.pnav-inner{
+  max-width:1500px;margin:0 auto;padding:9px clamp(14px,3vw,36px);
+  display:flex;gap:5px;align-items:center;overflow-x:auto;scrollbar-width:none;
+}
+.pnav-inner::-webkit-scrollbar{display:none}
+.pnav-item{
+  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  font-size:11px;font-weight:600;letter-spacing:.2px;color:var(--muted);
+  border:1px solid transparent;border-radius:999px;padding:7px 12px;
+  transition:all .16s ease;white-space:nowrap;
+}
+.pnav-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.pnav-item:hover{color:var(--ink);background:var(--panel)}
+.pnav-item.active{background:var(--navy);border-color:var(--navy);color:#FFFFFF;box-shadow:var(--shadow)}
+.pnav-badge{
+  display:none;min-width:17px;height:17px;padding:0 5px;border-radius:99px;
+  background:var(--oxb);color:#fff;font-size:9px;font-weight:800;line-height:17px;text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+.pnav-badge.on{display:inline-block}
+.pnav-badge.soft{background:var(--navy-soft);color:var(--navy-deep)}
+.pnav-badge.teal{background:var(--sage);color:#FFFFFF}
+.pnav-more-wrap{position:relative;margin-left:auto;flex:0 0 auto}
+.pnav-item .more-chev{width:11px;height:11px;transition:transform .18s ease}
+.pnav-more-wrap.open .more-chev{transform:rotate(180deg)}
+.more-menu{
+  display:none;position:fixed;z-index:90;
+  background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lift);
+  padding:14px;gap:6px 26px;grid-template-columns:repeat(2,minmax(190px,1fr));max-height:min(72vh,560px);overflow:auto;
+}
+.pnav-more-wrap.open .more-menu{display:grid;animation:vfade .18s ease}
+.more-lab{font-size:8.5px;letter-spacing:2.2px;font-weight:800;color:var(--faint);text-transform:uppercase;padding:8px 8px 3px;border-top:1px dashed var(--hair2);margin-top:6px}
+.more-col .more-lab:first-child{border-top:0;margin-top:0;padding-top:2px}
+.more-item{
+  display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  font-size:11.5px;font-weight:600;color:var(--ink2);border-radius:9px;padding:7px 8px;transition:all .13s;
+}
+.more-item:hover{background:var(--panel2);color:var(--ink)}
+.more-item.active{background:var(--brand-pale);color:var(--brand);font-weight:700}
+.more-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.more-item .pnav-badge{margin-left:auto}
+@media (max-width:640px){ .more-menu{grid-template-columns:1fr;right:auto;left:50%;transform:translateX(-50%);width:min(92vw,320px)} }
+.pnav-gap{flex:0 0 auto;width:5px;position:relative;margin:0 5px}
+.pnav-gap::before{content:"";position:absolute;left:0;top:50%;width:5px;height:5px;border-radius:50%;transform:translateY(-50%)}
+.pnav-gap[data-g="apricot"]::before{background:#F5CDB2}
+.pnav-gap[data-g="gold"]::before{background:#F0D8AC}
+.pnav-gap[data-g="rose"]::before{background:#F3BCCB}
+.pnav-gap[data-g="teal"]::before{background:#BFE5D6}
+.pnav-gap[data-g="ocean"]::before{background:#C3DDF0}
+
+/* ---------- app shell ---------- */
+.app{max-width:1500px;margin:0 auto;padding:20px clamp(14px,3vw,36px) 56px}
+.view{display:none}
+.view.active{display:block;animation:vfade .25s ease}
+@keyframes vfade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+.view-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;flex-wrap:wrap;margin:4px 0 16px}
+.view-head .overline{margin-bottom:4px}
+.view-title{font-family:var(--serif);font-weight:400;font-size:clamp(24px,2.6vw,31px);line-height:1.1;color:var(--ink);letter-spacing:.4px}
+.view-title em{color:var(--gold-deep)}
+.view-sub{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:5px;font-variant-numeric:tabular-nums}
+.view-sub b{color:var(--navy)}
+.view-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.overline{font-size:9.5px;letter-spacing:3.2px;color:var(--gold-deep);font-weight:800;margin-bottom:5px;text-transform:uppercase}
+
+/* ---------- panels & cards ---------- */
+.panel{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px 16px 12px;min-width:0}
+.panel.pad0{padding:0;overflow:hidden}
+.panel::before{content:"";position:absolute;inset:6px;border:1px dashed var(--stitch);border-radius:calc(var(--r) - 5px);pointer-events:none}
+.panel.plain::before{display:none}
+.panel-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;position:relative}
+.card-title{font-family:var(--serif);font-size:12.5px;font-weight:400;letter-spacing:2px;color:var(--ink2);text-transform:uppercase}
+.card-sub{font-size:10.5px;color:var(--muted);font-weight:700;letter-spacing:.4px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip-label{
+  display:inline-block;font-size:8.5px;letter-spacing:2.2px;color:var(--soft-ink);
+  background:var(--soft);border-radius:7px;padding:3px 9px;font-weight:800;text-transform:uppercase;margin-bottom:8px;
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--ink2);
+  border:1px solid var(--hair2);border-radius:999px;padding:8px 15px;background:var(--panel);
+  transition:all .15s ease;text-transform:uppercase;
+}
+.btn:hover{border-color:var(--gold-soft);color:var(--ink);transform:translateY(-1px)}
+.btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn-primary{background:var(--navy);border-color:var(--navy);color:#FFFFFF}
+.btn-primary:hover{background:var(--navy-deep);border-color:var(--navy-deep);color:#FFFFFF}
+.btn-soft{background:var(--brand-pale);border-color:transparent;color:var(--brand)}
+.btn-soft:hover{border-color:var(--navy-soft);color:var(--brand)}
+.btn-sm{padding:5px 10px;font-size:10px;border-radius:8px;letter-spacing:.6px}
+.btn.armed{background:var(--oxb);border-color:var(--oxb);color:#FFFFFF!important}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.icon-btn{
+  width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;
+  color:var(--faint);border:1px solid transparent;transition:all .14s;flex:0 0 auto;
+}
+.icon-btn:hover{color:var(--oxb);background:var(--oxb-pale)}
+.icon-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- pills & chips ---------- */
+.pill{
+  display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-weight:800;letter-spacing:.8px;
+  padding:3.5px 9px;border-radius:99px;text-transform:uppercase;line-height:1.3;white-space:nowrap;
+}
+.pill .pdot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:0 0 auto}
+.pill.gray{background:var(--soft);color:var(--soft-ink)}
+.pill.blue{background:var(--w1);color:var(--w1a)}
+.pill.red{background:var(--oxb-pale);color:var(--oxb)}
+.pill.green{background:var(--w6);color:var(--w6a)}
+.pill.gold{background:var(--gold-pale);color:var(--gold-deep)}
+.pill.teal{background:var(--sage-pale);color:var(--sage)}
+.pill.solid-red{background:var(--oxb);color:#FFFFFF}
+.pill.on-state{background:var(--navy);color:#fff}
+
+/* ---------- forms ---------- */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field>span{font-size:8.5px;letter-spacing:2.2px;color:var(--muted);font-weight:700}
+.in{
+  width:100%;background:var(--input);border:1px solid var(--hair2);border-radius:10px;
+  padding:8px 11px;font-size:12.5px;color:var(--ink);transition:border-color .15s, background .15s;
+}
+.in::placeholder{color:var(--phold)}
+.in:hover{border-color:var(--navy-soft)}
+.in:focus{outline:none;border-color:var(--navy-soft);background:var(--raise);box-shadow:0 0 0 3px var(--brand-pale)}
+select.in{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238D7A67' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:28px}
+textarea.in{resize:vertical;min-height:64px;line-height:1.5}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid .full{grid-column:1/-1}
+.check{position:relative;display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex:0 0 auto}
+.check input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+.box{
+  width:21px;height:21px;border-radius:7px;border:1.7px solid var(--chk,var(--brand));background:var(--input);
+  display:inline-flex;align-items:center;justify-content:center;transition:all .15s ease;pointer-events:none;
+}
+.box::after{
+  content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translate(0.5px,-1px);opacity:0;
+}
+.check:hover .box{border-color:var(--brand)}
+.check input:checked + .box{background:var(--chk,var(--brand));border-color:var(--chk,var(--brand))}
+.check input:checked + .box::after{opacity:1;animation:pop .22s ease}
+@keyframes pop{0%{transform:rotate(-45deg) scale(.4)}70%{transform:rotate(-45deg) scale(1.18)}100%{transform:rotate(-45deg) scale(1)}}
+.seg{display:inline-flex;background:var(--soft);border-radius:99px;padding:3px;gap:2px}
+.seg button{font-size:10px;font-weight:800;letter-spacing:.8px;padding:6px 13px;border-radius:99px;color:var(--soft-ink);text-transform:uppercase;transition:all .15s}
+.seg button.on{background:var(--navy);color:#fff;box-shadow:var(--shadow)}
+
+/* ---------- tab pill row ---------- */
+.tabsrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.tabsrow button{
+  font-size:10.5px;font-weight:700;letter-spacing:.7px;padding:7px 14px;border-radius:99px;
+  border:1px solid var(--hair2);background:var(--panel);color:var(--muted);text-transform:uppercase;transition:all .15s;
+}
+.tabsrow button:hover{color:var(--ink);border-color:var(--navy-soft)}
+.tabsrow button.on{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:var(--shadow)}
+
+/* ---------- progress bars ---------- */
+.bar{height:7px;border-radius:99px;background:var(--track);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--navy-soft);transition:width .35s ease,background .25s ease}
+.bar i.ok{background:#7FC4A8}
+.bar i.warn{background:var(--gold)}
+.bar i.over{background:var(--oxb)}
+.prog-meta{display:flex;align-items:baseline;gap:7px}
+.ppct{font-size:12px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* ---------- tables ---------- */
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{font-size:8.5px;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);font-weight:800;text-align:left;padding:7px 9px;border-bottom:1px solid var(--hair2);white-space:nowrap}
+.tbl td{padding:8px 9px;border-bottom:1px solid var(--hair);vertical-align:middle;font-variant-numeric:tabular-nums}
+.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr:hover td{background:var(--panel2)}
+.tbl .num{text-align:right}
+.tbl .ctr{text-align:center}
+.strike{text-decoration:line-through;color:var(--strike);font-style:italic}
+
+/* ---------- donut & legend ---------- */
+.donut{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.donut svg{display:block;transform:rotate(-90deg)}
+.donut .track{stroke:#F0E7D8;fill:none}
+.donut .fill{fill:none;transition:stroke-dasharray .5s ease,stroke .3s ease}
+.donut .dval{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--ink2);font-variant-numeric:tabular-nums}
+.donut .dval small{font-size:8px;color:var(--faint);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.legend{display:flex;flex-direction:column;gap:6px;min-width:0}
+.legend .lg{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink2);font-weight:600}
+.legend .lg i{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.legend .lg b{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--ink)}
+.legend-scroll{max-height:238px;overflow:auto;padding-right:4px}
+
+/* ---------- empty ---------- */
+.empty{padding:20px 10px;text-align:center;color:var(--faint);font-size:12px;font-style:italic;line-height:1.6}
+
+/* ---------- modal ---------- */
+.modal-ov{position:fixed;inset:0;background:rgba(122,74,40,.45);backdrop-filter:blur(3px);z-index:80;display:none;align-items:flex-start;justify-content:center;padding:5vh 16px 16px;overflow:auto}
+.modal-ov.on{display:flex}
+.modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow-lift);width:100%;max-width:580px;padding:20px 22px;position:relative;animation:mup .22s ease}
+.modal::before{content:"";position:absolute;inset:6px;border:1px dashed var(--stitch);border-radius:13px;pointer-events:none}
+.modal>*{position:relative}
+.modal h3{font-family:var(--serif);font-size:19px;font-weight:400;letter-spacing:.5px;color:var(--ink);margin-bottom:15px}
+.modal h3 em{color:var(--gold-deep);font-style:italic}
+.modal-x{position:absolute;top:13px;right:13px;z-index:2}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}
+@keyframes mup{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--dark);color:var(--ink2);
+  border:1px solid var(--gold-soft);
+  font-size:12px;font-weight:700;letter-spacing:.4px;padding:10px 18px;border-radius:99px;box-shadow:var(--shadow-lift);
+  opacity:0;pointer-events:none;transition:all .25s ease;z-index:60;max-width:86vw;text-align:center;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- footer ---------- */
+.foot{margin-top:26px;text-align:center;color:var(--faint)}
+.foot .foot-caps{font-size:10px;letter-spacing:1.6px;font-weight:700;text-transform:uppercase}
+.foot .hand-line{font-family:var(--hand);font-size:19px;color:var(--hand-ink);margin-top:5px}
+.foot a{color:var(--gold-deep);text-decoration:none;border-bottom:1px dashed var(--gold-soft)}
+.foot a:hover{color:var(--navy);border-bottom-color:var(--navy-soft)}
+
+/* ============================================================
+   MODULE STYLES — dashboard, charts, ledgers, calendars
+   ============================================================ */
+
+/* ---------- hero (dashboard) ---------- */
+.hero{
+  position:relative;overflow:hidden;border-radius:20px;border:1px solid var(--line);
+  background:linear-gradient(120deg,var(--mast1) 0%,var(--mast2) 52%,var(--mast3) 100%);
+  padding:26px clamp(18px,3vw,34px) 24px;box-shadow:var(--shadow);margin-bottom:18px;
+}
+.hero::after{content:"";position:absolute;right:-70px;top:-90px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.75),transparent 70%);pointer-events:none}
+.hero .ov{font-size:9.5px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);text-transform:uppercase}
+.hero h2{font-family:var(--serif);font-weight:400;font-size:clamp(24px,3vw,36px);color:var(--mast-ink);line-height:1.12;margin-top:6px}
+.hero h2 em{font-style:italic;color:var(--oxb)}
+.hero .hero-sub{font-size:12px;color:var(--mast-ink);opacity:.78;font-weight:600;margin-top:8px}
+.hero .hero-sub b{color:var(--navy-deep);opacity:1}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;position:relative}
+.hero .welcome-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;position:relative}
+
+/* ---------- journey hero art (dashboard attention card) ---------- */
+.jhero{
+  position:relative;overflow:hidden;border-radius:20px;border:1px solid var(--line);
+  background:linear-gradient(115deg,var(--mast1) 0%,var(--mast2) 58%,var(--mast3) 100%);
+  box-shadow:var(--shadow);margin-bottom:18px;display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;min-height:230px;
+}
+.jhero-art{position:relative;height:100%;min-height:210px}
+.jhero-art svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.jhero-txt{padding:26px clamp(18px,2.6vw,34px);position:relative;z-index:2}
+.jhero-txt .ov{font-size:9.5px;letter-spacing:3px;font-weight:800;color:var(--gold-deep);text-transform:uppercase}
+.jhero-txt h2{font-family:var(--serif);font-weight:400;font-size:clamp(22px,2.5vw,32px);color:var(--mast-ink);line-height:1.14;margin-top:6px}
+.jhero-txt h2 em{font-style:italic;color:var(--navy-deep)}
+.jhero-txt .jh-sub{font-size:12px;color:var(--mast-ink);opacity:.8;font-weight:600;margin-top:8px;max-width:46ch}
+.jhero-txt .jh-sub b{color:var(--navy-deep);opacity:1}
+.jh-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.jh-chip{
+  display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.68);
+  border:1px solid rgba(196,100,59,.25);border-radius:12px;padding:7px 12px;
+  font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--mast-ink);
+  font-variant-numeric:tabular-nums;
+}
+.jh-chip b{font-size:12.5px;letter-spacing:0;color:var(--navy-deep)}
+.jh-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;position:relative}
+@media (max-width:900px){ .jhero{grid-template-columns:1fr} .jhero-art{min-height:150px;order:-1} }
+
+/* ---------- KPI tiles ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:12px;margin-bottom:18px}
+.kpi{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:13px 14px 11px;min-width:0;transition:transform .15s ease, box-shadow .15s ease}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.kpi .kico{width:28px;height:28px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:8px}
+.kpi .kico svg{width:15px;height:15px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kpi b{display:block;font-size:18px;font-weight:800;color:var(--ink);line-height:1.15;font-variant-numeric:tabular-nums;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi b small{font-size:11px;font-weight:700;color:var(--muted)}
+.kpi span{display:block;font-size:8.5px;letter-spacing:1.6px;color:var(--muted);font-weight:800;text-transform:uppercase;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kpi.k-blue .kico{background:var(--w1)} .kpi.k-blue .kico svg{stroke:var(--w1a)}
+.kpi.k-pink .kico{background:var(--w2)} .kpi.k-pink .kico svg{stroke:var(--w2a)}
+.kpi.k-teal .kico{background:var(--sage-pale)} .kpi.k-teal .kico svg{stroke:var(--sage)}
+.kpi.k-peach .kico{background:var(--gold-pale)} .kpi.k-peach .kico svg{stroke:var(--gold-deep)}
+.kpi.k-violet .kico{background:var(--w5)} .kpi.k-violet .kico svg{stroke:var(--w5a)}
+.kpi.k-green .kico{background:var(--w6)} .kpi.k-green .kico svg{stroke:var(--w6a)}
+.kpi.k-red .kico{background:var(--oxb-pale)} .kpi.k-red .kico svg{stroke:var(--oxb)}
+
+/* ---------- layout grids ---------- */
+.dash-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+.dash-main{display:flex;flex-direction:column;gap:18px;min-width:0}
+.dash-rail{display:flex;flex-direction:column;gap:18px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:18px;min-width:0}
+.split2{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+
+/* ---------- charts ---------- */
+.chart-box{width:100%;min-width:0}
+.chart-box svg{width:100%;height:auto;display:block}
+.chart-box text{font-family:var(--sans)}
+.chart-tip{font-size:10px;color:var(--muted);font-weight:600;margin-top:2px}
+.legend-row{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--ink2);font-weight:600}
+.legend-row i{width:9px;height:9px;border-radius:3px;display:inline-block;margin-right:6px}
+
+/* ---------- ledger rows ---------- */
+.txrow{display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px dashed var(--hair2);min-width:0}
+.txrow:last-child{border-bottom:0}
+.txrow .txdot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.txrow .tx-main{flex:1;min-width:0}
+.txrow .tx-name{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txrow .tx-meta{font-size:10px;color:var(--faint);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txrow .tx-amt{font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.txrow .tx-amt.pos{color:var(--sage)}
+.txrow .tx-amt.neg{color:var(--oxb)}
+.amt-pos{color:var(--sage);font-weight:800}
+.amt-neg{color:var(--oxb);font-weight:800}
+.mut{color:var(--muted)} .fnt{color:var(--faint)} .sm{font-size:11px}
+.catdot{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px;vertical-align:baseline}
+.filterbar{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px}
+.filterbar .field{min-width:120px;flex:1 1 130px}
+.filterbar .field.grow{flex:2 1 180px}
+
+/* ---------- mini calendar ---------- */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal .hd{font-size:8.5px;letter-spacing:1.6px;font-weight:800;color:var(--muted);text-transform:uppercase;text-align:center;padding:3px 0}
+.cal-day{
+  min-height:64px;background:var(--panel2);border:1px solid var(--hair);border-radius:10px;
+  padding:4px 5px;font-size:10.5px;font-weight:700;color:var(--ink2);text-align:left;
+  display:flex;flex-direction:column;gap:2px;transition:all .13s ease;position:relative;overflow:hidden;
+}
+.cal-day:hover{border-color:var(--navy-soft);transform:translateY(-1px)}
+.cal-day.out{opacity:.42}
+.cal-day.today{background:var(--today);border-color:var(--gold-soft)}
+.cal-day.sel{outline:2px solid var(--focus);outline-offset:1px}
+.cal-day .dnum{font-variant-numeric:tabular-nums}
+.cal-day .cev{font-size:8.6px;font-weight:800;border-radius:5px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.cev.due{background:var(--oxb-pale);color:var(--oxb)}
+.cev.pay{background:var(--sage-pale);color:var(--sage)}
+.cev.more{background:var(--soft);color:var(--soft-ink)}
+.cal-detail{margin-top:14px}
+
+/* ---------- list rows / generic ---------- */
+.rowline{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed var(--hair2);min-width:0}
+.rowline:last-child{border-bottom:0}
+.rowline .rl-main{flex:1;min-width:0}
+.rowline .rl-t{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rowline .rl-s{font-size:10.5px;color:var(--muted);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bignum{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.4px;font-variant-numeric:tabular-nums}
+.bignum em{font-style:normal;font-size:12px;color:var(--muted);font-weight:700}
+.statline{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed var(--hair2);font-size:12px}
+.statline:last-child{border-bottom:0}
+.statline b{font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini-bar{display:flex;align-items:center;gap:9px;padding:5px 0}
+.mini-bar .mb-l{font-size:11px;font-weight:600;color:var(--ink2);width:96px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini-bar .bar{flex:1}
+.mini-bar .mb-v{font-size:10.5px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;width:74px;text-align:right}
+.goal-card{background:var(--panel2);border:1px solid var(--hair);border-radius:var(--r-sm);padding:12px}
+.goal-card + .goal-card{margin-top:10px}
+.alloc-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px dashed var(--hair2);font-size:12px}
+.alloc-row:last-child{border-bottom:0}
+.alloc-row .al-l{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alloc-row .al-v{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sticker{
+  display:inline-flex;align-items:center;gap:7px;font-family:var(--hand);font-size:17px;color:var(--brand);
+  background:var(--brand-pale);border:1px dashed var(--navy-soft);border-radius:12px;padding:6px 14px;transform:rotate(-1.5deg);
+}
+.sticker svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ---------- debt cards ---------- */
+.debt-card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:15px 16px 13px;overflow:hidden;transition:transform .15s ease, box-shadow .15s ease}
+.debt-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.debt-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--dc,var(--navy-soft))}
+.debt-card.done{background:linear-gradient(135deg,var(--sage-pale),var(--panel) 55%)}
+.debt-card.done::before{background:var(--sage)}
+.dc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.dc-name{font-family:var(--serif);font-size:15.5px;color:var(--ink);line-height:1.25}
+.dc-cred{font-size:10.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.dc-bal{font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.4px;font-variant-numeric:tabular-nums;line-height:1.1}
+.dc-bal small{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0}
+.dc-grid{display:flex;gap:14px;flex-wrap:wrap;margin:9px 0 10px}
+.dc-cell{min-width:70px}
+.dc-cell span{display:block;font-size:8px;letter-spacing:1.6px;color:var(--faint);font-weight:800;text-transform:uppercase}
+.dc-cell b{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.dc-actions{display:flex;gap:7px;flex-wrap:wrap;padding-top:9px;border-top:1px dashed var(--hair2)}
+.debt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
+
+/* ---------- milestones ---------- */
+.ms-card{position:relative;display:flex;gap:13px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px;transition:transform .15s ease}
+.ms-card:hover{transform:translateY(-1px)}
+.ms-ico{width:38px;height:38px;border-radius:12px;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center}
+.ms-ico svg{width:19px;height:19px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ms-ico.locked{background:var(--soft);color:var(--faint)}
+.ms-ico.done{background:var(--sage-pale);color:var(--sage)}
+.ms-ico.gold{background:var(--gold-pale);color:var(--gold-deep)}
+.ms-main{flex:1;min-width:0}
+.ms-t{font-size:13px;font-weight:700;color:var(--ink)}
+.ms-t.done{color:var(--sage)}
+.ms-s{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;line-height:1.5}
+.ms-date{font-family:var(--hand);font-size:16px;color:var(--gold-deep);margin-top:4px}
+.ms-body .bar{margin-top:8px}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;align-items:start}
+
+/* ---------- payoff plan ---------- */
+.order-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px dashed var(--hair2)}
+.order-row:last-child{border-bottom:0}
+.order-n{width:24px;height:24px;border-radius:8px;background:var(--brand-pale);color:var(--brand);font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}
+.order-row.is-focus .order-n{background:var(--navy);color:#fff}
+.order-main{flex:1;min-width:0}
+.order-t{font-size:12.5px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.order-s{font-size:10px;color:var(--muted);font-weight:600;font-variant-numeric:tabular-nums}
+.order-tag{font-size:8.5px;letter-spacing:1.2px;font-weight:800;text-transform:uppercase;background:var(--gold-pale);color:var(--gold-deep);border-radius:6px;padding:2.5px 8px;flex:0 0 auto}
+.sim-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.sim-cell{background:var(--panel2);border:1px solid var(--hair);border-radius:var(--r-sm);padding:11px 13px}
+.sim-cell span{display:block;font-size:8px;letter-spacing:1.8px;color:var(--faint);font-weight:800;text-transform:uppercase}
+.sim-cell b{display:block;font-size:16.5px;font-weight:800;color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.sim-cell b.ok{color:var(--sage)}
+.sim-cell small{display:block;font-size:9.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.bud-input{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.bud-input .in{max-width:150px}
+
+/* ---------- credit score ---------- */
+.score-hero{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.score-ring{position:relative;width:118px;height:118px;flex:0 0 auto}
+.score-ring svg{transform:rotate(-90deg);display:block}
+.score-ring .sr-val{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-ring .sr-val b{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.score-ring .sr-val small{font-size:8px;letter-spacing:1.6px;color:var(--faint);font-weight:800;text-transform:uppercase}
+.score-band{font-size:9px;letter-spacing:1.4px;font-weight:800;text-transform:uppercase;padding:4px 10px;border-radius:99px;display:inline-block}
+
+/* ---------- motivation ---------- */
+.why-box{font-family:var(--hand);font-size:19px;line-height:1.55;color:var(--ink2);min-height:84px}
+.win-item{position:relative;padding:10px 0 12px 22px;border-bottom:1px dashed var(--hair2)}
+.win-item:last-child{border-bottom:0}
+.win-item::before{content:"";position:absolute;left:4px;top:16px;width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 3px var(--gold-pale)}
+.win-t{font-size:12.5px;font-weight:700;color:var(--ink)}
+.win-d{font-size:9.5px;letter-spacing:1.2px;color:var(--gold-deep);font-weight:800;text-transform:uppercase;margin-top:1px}
+.win-n{font-size:11.5px;color:var(--muted);font-weight:500;margin-top:3px;line-height:1.55;white-space:pre-wrap}
+
+/* ---------- settings ---------- */
+.set-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start}
+.lacasa-card{
+  display:block;text-align:center;border-radius:var(--r);padding:22px 18px;text-decoration:none;
+  background:linear-gradient(120deg,var(--gold-pale),var(--mast2));border:1px solid var(--gold-line);
+  transition:all .18s ease;color:var(--ink);
+}
+.lacasa-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.lacasa-card .lc-by{font-size:8.5px;letter-spacing:2.6px;color:var(--gold-deep);font-weight:800;text-transform:uppercase}
+.lacasa-card .lc-name{font-family:var(--serif);font-size:21px;color:var(--ink);margin:7px 0 5px}
+.lacasa-card .lc-name em{font-style:italic;color:var(--gold-deep)}
+.lacasa-card .lc-sub{font-size:11px;color:var(--muted);font-weight:600}
+.lacasa-card .lc-hand{font-family:var(--hand);font-size:17px;color:var(--hand-ink);margin-top:9px}
+.danger-zone{border:1px solid rgba(192,87,91,.35);background:linear-gradient(150deg,#FDF6F6,transparent 60%)}
+.danger-zone .card-title{color:var(--oxb)}
+
+/* ---------- finance dashboard grid (dashboard KPI cards) ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;min-width:0;display:flex;flex-direction:column;transition:transform .15s ease, box-shadow .15s ease}
+.fcard:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift)}
+.fcard.span2r{grid-row:span 2}
+.fcard.fullrow{grid-column:1/-1}
+.fhead{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 13px;color:#fff;flex:0 0 auto}
+.fhead .fht{font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fhead .fh-sub{font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.85;white-space:nowrap}
+.fh-terra{background:var(--navy)}
+.fh-red{background:var(--oxb)}
+.fh-teal{background:var(--sage)}
+.fh-gold{background:var(--gold-deep)}
+.fh-plum{background:#7B5E9E}
+.fbody{padding:12px 13px;flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center}
+.fcard .fbody .empty{padding:14px 6px}
+.fkpi .fbody{gap:3px;padding:13px 15px}
+.fkpi .fv{font-size:21px;font-weight:800;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fkpi .fv small{font-size:11px;font-weight:700;color:var(--muted)}
+.fkpi .fl{font-size:8.5px;letter-spacing:1.4px;color:var(--muted);font-weight:800;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-debt{color:var(--oxb)} .v-paid{color:var(--sage)}
+.v-free{color:var(--navy)} .v-free.neg{color:var(--oxb)}
+.fd-title-card .fbody{gap:4px;justify-content:center}
+.fd-big{font-family:var(--serif);font-size:clamp(18px,1.6vw,23px);color:var(--mast-ink);line-height:1.12}
+.fd-big em{font-style:italic;color:var(--navy-deep)}
+.fd-note{font-size:10.5px;color:var(--muted);font-weight:600;line-height:1.55}
+.fsel{margin-top:7px;max-width:200px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:5px 8px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.fsel:focus{outline:2px solid var(--focus);outline-offset:1px}
+.toe-wrap{overflow:auto;max-height:560px}
+.toe-tbl{width:100%;border-collapse:collapse;font-size:11.5px}
+.toe-tbl td{padding:5.5px 6px;border-bottom:1px dashed var(--hair2);font-variant-numeric:tabular-nums;vertical-align:middle}
+.toe-tbl tr:last-child td{border-bottom:0}
+.toe-tbl .toe-cat{display:flex;align-items:center;gap:7px;min-width:0;font-weight:600;color:var(--ink2)}
+.toe-tbl .toe-cat .nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toe-tbl .toe-amt{text-align:right;font-weight:700;color:var(--ink);white-space:nowrap}
+.toe-tbl .toe-pct{text-align:right;color:var(--muted);font-weight:600;width:46px;white-space:nowrap}
+.toe-tbl tr.toe-total td{border-top:2px solid var(--hair2);border-bottom:0;font-weight:800}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .dash-grid,.split2{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fcard.span2r{grid-row:auto}
+}
+@media (max-width:640px){
+  .fgrid{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .cal-day{min-height:52px;padding:3px}
+  .cal-day .cev{display:none}
+  .cal-day .cev.only{display:block}
+  .theme-group>span{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="mast-inner">
+    <div class="mast-brand">
+      <span class="mast-emblem" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="15" r="4.4"/><path d="M12 4v3M5 6.8l2 2.2M19 6.8l-2 2.2M2.5 20h19"/><path d="M6.5 16.8h11"/></svg>
+      </span>
+      <div>
+        <h1>Debt Payoff <em>Tracker</em></h1>
+        <p>one payment at a time</p>
+      </div>
+    </div>
+    <div class="mast-actions">
+      <span class="mast-date" id="mastDate"></span>
+      <div class="theme-group" role="group" aria-label="Accent mood">
+        <span>MOOD</span>
+        <button class="theme-dot" data-theme-set="sunrise" style="background:#F5CDB2" title="Sunrise — warm apricot" aria-label="Sunrise mood"></button>
+        <button class="theme-dot" data-theme-set="ocean" style="background:#C3DDF0" title="Ocean — calm steel blue" aria-label="Ocean mood"></button>
+        <button class="theme-dot" data-theme-set="meadow" style="background:#CDE6BE" title="Meadow — fresh leaf" aria-label="Meadow mood"></button>
+        <button class="theme-dot" data-theme-set="lilac" style="background:#D9D2EE" title="Lilac — soft violet" aria-label="Lilac mood"></button>
+        <button class="theme-dot" data-theme-set="dusk" style="background:#CBD5DD" title="Dusk — quiet graphite" aria-label="Dusk mood"></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="pnav" aria-label="Planner modules">
+  <div class="pnav-inner" id="pnav">
+    <button class="pnav-item active" data-view="dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg>
+      Dashboard</button>
+    <button class="pnav-item" data-view="debts">
+      <svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6.5 14.5h4"/></svg>
+      My Debts<span class="pnav-badge soft" data-badge="debts"></span></button>
+    <button class="pnav-item" data-view="plan">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+      Payoff Plan</button>
+    <button class="pnav-item" data-view="payments">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Payments<span class="pnav-badge soft" data-badge="pay"></span></button>
+    <button class="pnav-item" data-view="budget">
+      <svg viewBox="0 0 24 24"><path d="M6 3.5h12a1.5 1.5 0 0 1 1.5 1.5v15.5H6A2.5 2.5 0 0 1 3.5 18V6A2.5 2.5 0 0 1 6 3.5z"/><path d="M3.5 18A2.5 2.5 0 0 1 6 15.5h13.5M7.5 8h7"/></svg>
+      Money Plan</button>
+    <button class="pnav-item" data-view="calendar">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Calendar<span class="pnav-badge soft" data-badge="due"></span></button>
+    <div class="pnav-more-wrap" id="navMoreWrap">
+      <button class="pnav-item" id="navMore" data-act="more-toggle" aria-haspopup="true" aria-expanded="false">
+        <svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg>
+        More
+        <svg viewBox="0 0 24 24" class="more-chev"><path d="m6 9.5 6 6 6-6"/></svg>
+      </button>
+      <div class="more-menu" id="moreMenu" role="menu">
+        <div class="more-col">
+          <div class="more-lab">Track</div>
+          <button class="more-item" data-view="milestones"><svg viewBox="0 0 24 24"><path d="M5 21V4"/><path d="M5 4h13l-2.5 4L18 12H5"/></svg>Milestones</button>
+          <button class="more-item" data-view="efund"><svg viewBox="0 0 24 24"><path d="M19.5 13.5c0 3.6-3.4 6-7.5 6-1 0-2-.15-2.9-.42L6 20.5v-2.6c-1.5-1.1-2.5-2.66-2.5-4.4 0-3.6 3.36-6.5 7.5-6.5 1 0 1.9.14 2.8.4L16.5 5l.5 3.2c1.5 1.15 2.5 2.7 2.5 4.3z"/><circle cx="15.5" cy="12" r=".9" fill="currentColor" stroke="none"/></svg>Emergency Fund</button>
+          <button class="more-item" data-view="progress"><svg viewBox="0 0 24 24"><path d="M4 19.5 9 13l3.5 3 7.5-8.5"/><path d="M15.5 7.5H20v4.5"/></svg>Progress</button>
+          <button class="more-item" data-view="interest"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 8v.01M12 11v5"/></svg>Interest Insights</button>
+        </div>
+        <div class="more-col">
+          <div class="more-lab">Personal</div>
+          <button class="more-item" data-view="score"><svg viewBox="0 0 24 24"><path d="M4 19.5V13M10 19.5V8M16 19.5v-8M21 19.5V5"/><path d="M3 19.5h18"/></svg>Credit Score</button>
+          <button class="more-item" data-view="motivation"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.4-7.5 10-7.5 10z"/></svg>Motivation</button>
+          <button class="more-item" data-view="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.15-1.4l2-1.55-2-3.45-2.35.95a7 7 0 0 0-2.4-1.4L13.7 2.6h-3.4l-.4 2.55a7 7 0 0 0-2.4 1.4L5.15 5.6l-2 3.45 2 1.55A7 7 0 0 0 5 12a7 7 0 0 0 .15 1.4l-2 1.55 2 3.45 2.35-.95a7 7 0 0 0 2.4 1.4l.4 2.55h3.4l.4-2.55a7 7 0 0 0 2.4-1.4l2.35.95 2-3.45-2-1.55A7 7 0 0 0 19 12z"/></svg>Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="app">
+  <section class="view active" id="view-dashboard"></section>
+  <section class="view" id="view-debts"></section>
+  <section class="view" id="view-plan"></section>
+  <section class="view" id="view-payments"></section>
+  <section class="view" id="view-budget"></section>
+  <section class="view" id="view-calendar"></section>
+  <section class="view" id="view-milestones"></section>
+  <section class="view" id="view-efund"></section>
+  <section class="view" id="view-progress"></section>
+  <section class="view" id="view-interest"></section>
+  <section class="view" id="view-score"></section>
+  <section class="view" id="view-motivation"></section>
+  <section class="view" id="view-settings"></section>
+
+  <div class="foot">
+    <div class="foot-caps">Debt Payoff Tracker · every payment brings freedom closer</div>
+    <div class="hand-line">Created by <a href="https://lacasaprint.etsy.com" target="_blank" rel="noopener noreferrer">LaCasaPrint</a> — small payments, big relief ✿</div>
+  </div>
+</main>
+
+<div class="modal-ov" id="modalOv">
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="icon-btn modal-x" data-act="modal-close" aria-label="Close">
+      <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+'use strict';
+/* ============================================================
+   DEBT PAYOFF TRACKER — core engine
+   Single-file · zero dependencies · localStorage persistence
+   Structure & design DNA: gentle-planner family (original)
+   13 sections · 5 moods · every statistic computed live
+   ============================================================ */
+
+/* ---------- constants ---------- */
+const LS_KEY = 'debtPayoffTracker.v1';
+const MONTHS = ['January','February','March','April','May','June','July',
+                'August','September','October','November','December'];
+const DOW_SHORT = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const CUR_OPTIONS = ['$ — US Dollar','€ — Euro','£ — British Pound','¥ — Yen','₹ — Rupee','R — Rand','R$ — Real','C$ — Dollar (CA)','A$ — Dollar (AU)','₩ — Won','zł — Złoty','kr — Krona','CHF — Franc','₪ — Shekel'];
+const MOODS = [
+  {id:'sunrise', c:'#F5CDB2', t:'Sunrise — warm apricot'},
+  {id:'ocean',   c:'#C3DDF0', t:'Ocean — calm steel blue'},
+  {id:'meadow',  c:'#CDE6BE', t:'Meadow — fresh leaf'},
+  {id:'lilac',   c:'#D9D2EE', t:'Lilac — soft violet'},
+  {id:'dusk',    c:'#CBD5DD', t:'Dusk — quiet graphite'}
+];
+const DEBT_KINDS = [
+  ['credit_card','Credit card'],
+  ['student','Student loan'],
+  ['auto','Auto loan'],
+  ['personal','Personal loan'],
+  ['medical','Medical bill'],
+  ['mortgage','Mortgage'],
+  ['bnpl','Buy now pay later'],
+  ['other','Other debt']
+];
+const DEEP_KIND_COLORS = {credit_card:'#C0575B', student:'#45789E', auto:'#9A6A22', personal:'#74639F', medical:'#C25E7A', mortgage:'#3E8E6E', bnpl:'#B3763F', other:'#8D7A67'};
+const PASTELS = ['#F5CDB2','#C3DDF0','#BFE5D6','#F0DDB4','#D9D2EE','#F3BCCB','#CDE6BE','#E8D8C4'];
+const DEEPS   = ['#C4643B','#45789E','#3E8E6E','#9A6A22','#74639F','#C25E7A','#4E8A3F','#8A7448'];
+const BUREAUS = ['Equifax','Experian','TransUnion'];
+const SCORE_MIN = 300, SCORE_MAX = 850;
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+
+/* ---------- tiny utils ---------- */
+const $  = id => document.getElementById(id);
+const $$ = s  => Array.from(document.querySelectorAll(s));
+const pad2 = n => String(n).padStart(2,'0');
+const iso  = d => d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+const fromIso = s => { const p=s.split('-').map(Number); return new Date(p[0],p[1]-1,p[2]); };
+const addD = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const addM = (d,n) => { const x=new Date(d.getFullYear(),d.getMonth()+n,1);
+                        const last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();
+                        x.setDate(Math.min(d.getDate(),last)); return x; };
+const diffD = (a,b) => Math.round((fromIso(a)-fromIso(b))/86400000);   // a - b in days
+const todayIso = () => iso(TODAY);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp = (n,a,b) => Math.max(a,Math.min(b,n));
+const num = (v,fb) => { const n=parseFloat(v); return isFinite(n)?n:(fb||0); };
+const sum = arr => arr.reduce((a,x)=>a+x,0);
+const mkOf = d => d.getFullYear()+'-'+pad2(d.getMonth()+1);            // month key of Date
+const mkAdd = (mk,n) => { const p=mk.split('-').map(Number); return mkOf(addM(new Date(p[0],p[1]-1,1),n)); };
+const mkLabel = mk => { const p=mk.split('-').map(Number); return MONTHS[p[1]-1].slice(0,3)+' '+p[0]; };
+const mkLabelFull = mk => { const p=mk.split('-').map(Number); return MONTHS[p[1]-1]+' '+p[0]; };
+const daysInMk = mk => { const p=mk.split('-').map(Number); return new Date(p[0],p[1],0).getDate(); };
+function fmtDate(s){ if(!s) return '—'; const d=fromIso(s); return MONTHS[d.getMonth()].slice(0,3)+' '+d.getDate(); }
+function fmtDateY(s){ if(!s) return '—'; const d=fromIso(s); return MONTHS[d.getMonth()].slice(0,3)+' '+d.getDate()+', '+d.getFullYear(); }
+/* last n month keys ending with current month */
+function lastMks(n){ const out=[]; for(let i=n-1;i>=0;i--) out.push(mkAdd(mkOf(TODAY),-i)); return out; }
+const mkShort = mk => MONTHS[Number(mk.slice(5,7))-1].slice(0,3);
+
+/* ---------- icons ---------- */
+const ICONS = {
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  trash:'<path d="M4 7h16M10 4h4a1 1 0 0 1 1 1v2H9V5a1 1 0 0 1 1-1z"/><path d="M6.5 7l.8 12a1.5 1.5 0 0 0 1.5 1.4h6.4a1.5 1.5 0 0 0 1.5-1.4l.8-12"/><path d="M10 11v6M14 11v6"/>',
+  x:'<path d="M6 6l12 12M18 6 6 18"/>',
+  check:'<path d="M4.5 12.5l5 5L19.5 7"/>',
+  chevL:'<path d="M14.5 5 8 12l6.5 7"/>',
+  chevR:'<path d="m9.5 5 6.5 7-6.5 7"/>',
+  chevU:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  chevD:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+  spark:'<path d="M12 3.2l2.1 6 6.2 2.3-6.2 2.3-2.1 6-2.1-6-6.2-2.3 6.2-2.3z"/>',
+  card:'<rect x="2.5" y="5.5" width="19" height="13" rx="2.5"/><path d="M2.5 10h19M6.5 14.5h4"/>',
+  coins:'<circle cx="9" cy="9" r="5.5"/><path d="M14.2 5.6a5.5 5.5 0 1 1-6.9 8.6"/><path d="M7 9h4M9 7v4"/>',
+  bank:'<path d="M3 9.5 12 4l9 5.5"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20.5h18"/>',
+  calc:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5h.01"/>',
+  chart:'<path d="M4 19.5V13M10 19.5V8M16 19.5v-8M21 19.5V5"/><path d="M3 19.5h18"/>',
+  trend:'<path d="M4 19.5 9 13l3.5 3 7.5-8.5"/><path d="M15.5 7.5H20v4.5"/>',
+  trendD:'<path d="M4 5l5 6.5 3.5-3 7.5 8.5"/><path d="M15.5 16.5H20V12"/>',
+  cal:'<rect x="3" y="5" width="18" height="16" rx="2.5"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  bell:'<path d="M18 9a6 6 0 1 0-12 0c0 6-2.5 7-2.5 7h17S18 15 18 9z"/><path d="M10.3 20a2 2 0 0 0 3.4 0"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5.5H4.5c0 3 1.6 4.6 3.5 4.9M16 5.5h3.5c0 3-1.6 4.6-3.5 4.9M12 13v3.5M8.5 20.5h7M12 16.5c-1.8 0-2.6 1.3-2.6 2.2h5.2c0-.9-.8-2.2-2.6-2.2z"/>',
+  gear:'<circle cx="12" cy="12" r="3.2"/><path d="M19 12a7 7 0 0 0-.15-1.4l2-1.55-2-3.45-2.35.95a7 7 0 0 0-2.4-1.4L13.7 2.6h-3.4l-.4 2.55a7 7 0 0 0-2.4 1.4L5.15 5.6l-2 3.45 2 1.55A7 7 0 0 0 5 12a7 7 0 0 0 .15 1.4l-2 1.55 2 3.45 2.35-.95a7 7 0 0 0 2.4 1.4l.4 2.55h3.4l.4-2.55a7 7 0 0 0 2.4-1.4l2.35.95 2-3.45-2-1.55A7 7 0 0 0 19 12z"/>',
+  eye:'<path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.6"/>',
+  target:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>',
+  leaf:'<path d="M5 19C5 9 12 4 20 4c0 9-4 15-13 15z"/><path d="M5 19c2-5 6-8 10-9.5"/>',
+  down:'<path d="M12 5v14M5 12l7 7 7-7"/>',
+  up:'<path d="M12 19V5M5 12l7-7 7 7"/>',
+  flag:'<path d="M5 21V4"/><path d="M5 4h13l-2.5 4L18 12H5"/>',
+  scale:'<path d="M12 3v18M5 6.5 12 4l7 2.5"/><path d="M5 6.5 2.5 13a3 3 0 0 0 5 0z M19 6.5 16.5 13a3 3 0 0 0 5 0z"/><path d="M8 21h8"/>',
+  house:'<path d="M4 11 12 4l8 7"/><path d="M6 9.5V20h12V9.5"/><path d="M10 20v-5h4v5"/>',
+  pig:'<path d="M19.5 13.5c0 3.6-3.4 6-7.5 6-1 0-2-.15-2.9-.42L6 20.5v-2.6c-1.5-1.1-2.5-2.66-2.5-4.4 0-3.6 3.36-6.5 7.5-6.5 1 0 1.9.14 2.8.4L16.5 5l.5 3.2c1.5 1.15 2.5 2.7 2.5 4.3z"/><circle cx="15.5" cy="12" r=".9" fill="currentColor" stroke="none"/><path d="M10 19.3V21M6.2 6.9C6.2 5 8 3.5 10 4.3"/>',
+  heart:'<path d="M12 20.5s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.9c0 5.4-7.5 10-7.5 10z"/>',
+  star:'<path d="M12 3.5l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8L3.5 9.7l5.9-.9z"/>',
+  sun:'<circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/>',
+  download:'<path d="M12 4v11M6.5 10.5 12 16l5.5-5.5"/><path d="M4 20h16"/>',
+  upload:'<path d="M12 16V5M6.5 9.5 12 4l5.5 5.5"/><path d="M4 20h16"/>',
+  route:'<circle cx="6" cy="19" r="2.4"/><circle cx="18" cy="5" r="2.4"/><path d="M8.4 19H15a3.5 3.5 0 0 0 0-7H9a3.5 3.5 0 0 1 0-7h6.6"/>',
+  book:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v18H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 18.5A2.5 2.5 0 0 1 6.5 16H20"/>'
+};
+const icon = (n,s) => '<svg viewBox="0 0 24 24"'+(s?' style="'+s+'"':'')+'>'+ (ICONS[n]||'') +'</svg>';
+
+/* ---------- money ---------- */
+function cur(){ return db.settings.cur || '$'; }
+function fmtM(n, force2){
+  const neg = n < 0; const a = Math.abs(n);
+  const dec = (force2 || (a % 1 !== 0)) ? 2 : 0;
+  const s = a.toLocaleString('en-US',{minimumFractionDigits:dec, maximumFractionDigits:2});
+  return (neg?'−':'') + cur() + s;
+}
+function fshort(n){
+  const a = Math.abs(n);
+  if(a >= 1000000) return (n/1000000).toFixed(1).replace(/\.0$/,'') + 'M';
+  if(a >= 1000) return (n/1000).toFixed(1).replace(/\.0$/,'') + 'k';
+  return String(Math.round(n));
+}
+
+/* ============================================================
+   COMPUTED ENGINE — every number on every page flows from here
+   ============================================================ */
+const debtById = id => db.debts.find(d=>d.id===id) || null;
+const activeDebts = () => db.debts.filter(d => d.balance > 0.004 && !d.paidOff);
+const kindLabel = k => (DEBT_KINDS.find(x=>x[0]===k)||['','Other debt'])[1];
+
+function totals(){
+  const startTotal = sum(db.debts.map(d => Math.max(d.start, 0) || d.balance));
+  const balTotal   = sum(db.debts.filter(d=>!d.paidOff).map(d => Math.max(d.balance,0)));
+  const paidTotal  = Math.max(0, startTotal - balTotal);
+  const minTotal   = sum(activeDebts().map(d => d.minPay));
+  const moInterest = sum(activeDebts().map(d => d.balance * (d.rate||0) / 1200));
+  const pctFree    = startTotal > 0 ? clamp(paidTotal/startTotal*100, 0, 100) : 0;
+  const avgApr     = balTotal > 0 ? sum(activeDebts().map(d => (d.rate||0)*d.balance))/balTotal : 0;
+  return {startTotal, balTotal, paidTotal, minTotal, moInterest, pctFree, avgApr};
+}
+function payTotals(){
+  const thisMk = mkOf(TODAY);
+  const thisMonth = sum(db.payments.filter(p => p.date.slice(0,7) === thisMk).map(p => p.amount));
+  const allPaid   = sum(db.payments.map(p => p.amount));
+  const interestPaid = sum(db.payments.map(p => p.interest || 0));
+  const count = db.payments.length;
+  return {thisMonth, allPaid, interestPaid, count};
+}
+/* balance at the end of each of the last n months, reconstructed
+   from the payment log + current balances (always from real data) */
+function balanceTrend(n){
+  const mks = lastMks(n);
+  const now = totals().balTotal;
+  const after = mk => sum(db.payments.filter(p => p.date.slice(0,7) > mk).map(p => p.amount));
+  const series = mks.map(mk => now + after(mk));
+  /* prepend the implied starting point so the curve shows the full journey */
+  const firstAfter = sum(db.payments.filter(p => p.date.slice(0,7) >= mks[0]).map(p => p.amount));
+  const labels = mks.map(mkShort);
+  return {labels, series, startVal: now + firstAfter + sum(db.payments.filter(p=>p.date.slice(0,7) < mks[0]).map(p=>p.amount))};
+}
+/* payments summed per month for the last n months */
+function paymentsByMonth(n){
+  const mks = lastMks(n);
+  return {
+    labels: mks.map(mkShort),
+    data: mks.map(mk => sum(db.payments.filter(p => p.date.slice(0,7) === mk).map(p => p.amount)))
+  };
+}
+/* payoff order under the chosen method */
+function orderedDebts(method){
+  const list = activeDebts().slice();
+  if(method === 'avalanche')      list.sort((a,b)=> (b.rate||0)-(a.rate||0) || a.balance-b.balance);
+  else if(method === 'custom'){
+    const co = db.settings.customOrder || [];
+    list.sort((a,b)=>{
+      const ia = co.indexOf(a.id), ib = co.indexOf(b.id);
+      return (ia<0?999:ia)-(ib<0?999:ib) || a.balance-b.balance;
+    });
+  }
+  else list.sort((a,b)=> a.balance-b.balance);   // snowball
+  return list;
+}
+/* amortization simulation — the heart of the payoff plan */
+function payoffSim(method, budget){
+  const list = activeDebts().map(d => ({id:d.id, name:d.name, bal:Math.max(d.balance,0), rate:(d.rate||0)/100, min:Math.max(d.minPay,0)}));
+  const res = {months:0, interest:0, freeDate:null, series:[], monthly:[], order:[], feasible:true, perDebt:{}};
+  if(!list.length){ res.freeDate = todayIso(); return res; }
+  const minSum = sum(list.map(l=>l.min));
+  if(budget < minSum - 0.005) res.feasible = false;
+  list.forEach(l => res.perDebt[l.id] = {interest:0, months:0, paid:0});
+  res.series.push(sum(list.map(l=>l.bal)));
+  const cap = 600;
+  let m = 0;
+  while(list.some(l=>l.bal > 0.005) && m < cap){
+    m++;
+    let mInterest = 0, mPaid = 0;
+    /* accrue monthly interest */
+    for(const l of list){ if(l.bal > 0){ const i = l.bal * l.rate / 12; l.bal += i; mInterest += i; } }
+    /* pay minimums first */
+    let pocket = budget;
+    for(const l of list){
+      if(l.bal <= 0 || pocket <= 0) continue;
+      const pay = Math.min(pocket, l.min, l.bal);
+      l.bal -= pay; pocket -= pay; mPaid += pay;
+      res.perDebt[l.id].paid += pay;
+    }
+    /* roll every leftover cent down the order */
+    for(const l of list){
+      if(pocket <= 0) break;
+      if(l.bal <= 0) continue;
+      const pay = Math.min(pocket, l.bal);
+      l.bal -= pay; pocket -= pay; mPaid += pay;
+      res.perDebt[l.id].paid += pay;
+    }
+    res.interest += mInterest;
+    res.monthly.push({paid:mPaid, interest:mInterest, balance:Math.max(0,sum(list.map(l=>l.bal)))});
+    res.series.push(Math.max(0,sum(list.map(l=>l.bal))));
+    for(const l of list){
+      if(l.bal <= 0.005 && res.perDebt[l.id].months === 0) res.perDebt[l.id].months = m;
+    }
+  }
+  res.months = m;
+  res.order = list.map(l=>l.id);
+  res.freeDate = iso(addM(TODAY, res.months));
+  return res;
+}
+/* minimum-only baseline (for "interest saved" comparisons) */
+function minimumOnlySim(){
+  const minTot = totals().minTotal;
+  return payoffSim('snowball', minTot);
+}
+/* due dates inside a given month for active debts */
+function duesInMk(mk){
+  const dim = daysInMk(mk);
+  return activeDebts()
+    .map(d => ({debt:d, date: mk+'-'+pad2(Math.min(d.dueDay||1, dim))}))
+    .sort((a,b)=> a.date < b.date ? -1 : 1);
+}
+function duesWithin(days){
+  const end = iso(addD(TODAY, days));
+  return duesInMk(mkOf(TODAY)).concat(duesInMk(mkAdd(mkOf(TODAY),1)))
+    .filter(x => x.date >= todayIso() && x.date <= end);
+}
+/* emergency fund + sinking fund totals */
+function efundSaved(){ return sum((db.efund.contribs||[]).map(c=>c.amount)); }
+function fundsTotal(){ return sum(db.funds.map(f=>f.saved)); }
+
+/* ============================================================
+   CHARTS — original lightweight SVG library (family DNA)
+   ============================================================ */
+function niceMax(v){
+  if(v <= 0) return 1;
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  for(const m of [1,1.2,1.5,2,2.5,3,4,5,6,8,10]){ if(v <= m*p) return m*p; }
+  return 10*p;
+}
+function gridY(P, W, H, min, max, fs){
+  let s = '';
+  for(let i=0;i<=4;i++){
+    const y = P.t + (H-P.t-P.b) * i/4;
+    const v = max - (max-min) * i/4;
+    s += `<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>`;
+    s += `<text x="${P.l-6}" y="${y+3}" text-anchor="end" font-size="${fs||8.5}" fill="var(--chart-lab)">${fshort(v)}</text>`;
+  }
+  return s;
+}
+/* grouped bars: series = [{name, color, data:[..]}] */
+function chartBars(host, labels, series, opts){
+  opts = opts || {};
+  const W = +opts.w || 640, H = +opts.h || 240, P = {l:40, r:8, t:12, b:22}, fs = +opts.fs || 8.5;
+  const max = niceMax(Math.max(1, ...series.flatMap(s=>s.data)));
+  const iw = W-P.l-P.r, ih = H-P.t-P.b;
+  const gw = iw / Math.max(1, labels.length);
+  const bw = Math.min(26, (gw*0.68) / series.length);
+  let s = gridY(P,W,H,0,max,fs);
+  labels.forEach((lab,i)=>{
+    const cx = P.l + gw*i + gw/2;
+    const step = bw + 3;
+    const x0 = cx - (series.length*step - 3)/2;
+    series.forEach((sr,j)=>{
+      const v = sr.data[i] || 0;
+      const bh = Math.max(v>0?2:0, ih * v/max);
+      s += `<rect x="${(x0+j*step).toFixed(1)}" y="${(P.t+ih-bh).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" rx="3.5" fill="${sr.color}"><title>${esc(lab)} · ${esc(sr.name)}: ${fmtM(v)}</title></rect>`;
+    });
+    if(labels.length <= 14 || i % 2 === 0)
+      s += `<text x="${cx}" y="${H-7}" text-anchor="middle" font-size="${fs}" fill="var(--chart-lab)">${esc(lab)}</text>`;
+  });
+  $(host).innerHTML = `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg></div>`
+    + legendRow(series);
+}
+/* multi-line / area chart: series = [{name,color,data,area,dash}] */
+function chartLines(host, labels, series, opts){
+  opts = opts || {};
+  const W = +opts.w || 640, H = +opts.h || 240, P = {l:40, r:8, t:12, b:22}, fs = +opts.fs || 8.5;
+  const all = series.flatMap(s=>s.data).filter(v=>isFinite(v));
+  const max = niceMax(Math.max(1, ...all));
+  const min = Math.min(0, ...all);
+  const iw = W-P.l-P.r, ih = H-P.t-P.b;
+  const X = i => labels.length<2 ? P.l+iw/2 : P.l + iw * i/(labels.length-1);
+  const Y = v => P.t + ih * (1 - (v-min)/((max-min)||1));
+  let s = gridY(P,W,H,min,max,fs);
+  if(min < 0){
+    const zy = Y(0);
+    s += `<line x1="${P.l}" y1="${zy}" x2="${W-P.r}" y2="${zy}" stroke="var(--chart-axis)" stroke-width="1" stroke-dasharray="3 3"/>`;
+  }
+  labels.forEach((lab,i)=>{
+    if(labels.length <= 14 || i % 2 === 0)
+      s += `<text x="${X(i)}" y="${H-7}" text-anchor="middle" font-size="${fs}" fill="var(--chart-lab)">${esc(lab)}</text>`;
+  });
+  for(const sr of series){
+    const pts = sr.data.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+    if(sr.area && sr.data.length > 1){
+      s += `<path d="M${X(0).toFixed(1)},${Y(0).toFixed(1)} L${pts.replace(/ /g,' L')} L${X(sr.data.length-1).toFixed(1)},${Y(0).toFixed(1)} Z" fill="${sr.color}" opacity="0.14"/>`;
+    }
+    if(sr.data.length > 1)
+      s += `<polyline points="${pts}" fill="none" stroke="${sr.color}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"${sr.dash?' stroke-dasharray="5 4"':''}/>`;
+    sr.data.forEach((v,i)=>{ if(isFinite(v)) s += `<circle cx="${X(i).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2.6" fill="var(--panel)" stroke="${sr.color}" stroke-width="1.8"><title>${esc(labels[i])} · ${esc(sr.name)}: ${fmtM(v)}</title></circle>`; });
+  }
+  $(host).innerHTML = `<div class="chart-box"><svg viewBox="0 0 ${W} ${H}" role="img">${s}</svg></div>`
+    + legendRow(series.filter(sr=>sr.name));
+}
+function legendRow(series){
+  if(!series.length) return '';
+  return '<div class="legend-row">' + series.map(sr=>`<span><i style="background:${sr.color}"></i>${esc(sr.name)}</span>`).join('') + '</div>';
+}
+/* donut: items = [{label, value, color}] */
+function chartDonut(host, items, center){
+  const total = sum(items.map(i=>i.value));
+  const box = $(host);
+  if(!box) return;
+  if(total <= 0){
+    box.innerHTML = '<div class="empty">Nothing to chart yet — add your debts first.</div>';
+    return;
+  }
+  const R = 52, C = 2*Math.PI*R;
+  let off = 0, segs = '';
+  for(const it of items){
+    const frac = it.value/total;
+    const len = frac*C;
+    segs += `<circle class="fill" cx="70" cy="70" r="${R}" stroke="${it.color}" stroke-width="21" stroke-dasharray="${Math.max(0,len-1.2).toFixed(2)} ${C}" stroke-dashoffset="${(-off).toFixed(2)}"><title>${esc(it.label)}: ${fmtM(it.value)} (${Math.round(frac*100)}%)</title></circle>`;
+    off += len;
+  }
+  box.innerHTML = `<div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <div class="donut"><svg width="140" height="140" viewBox="0 0 140 140">
+      <circle class="track" cx="70" cy="70" r="${R}" stroke-width="21"></circle>${segs}</svg>
+      <div class="dval">${center || '<b>'+fshort(total)+'</b><small>total</small>'}</div>
+    </div>
+    <div class="legend legend-scroll" style="flex:1;min-width:150px">
+      ${items.map(it=>`<div class="lg"><i style="background:${it.color}"></i><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(it.label)}</span><b>${fmtM(it.value)}</b></div>`).join('')}
+    </div></div>`;
+}
+
+/* ============================================================
+   STORE — schema, persistence, demo data
+   ============================================================ */
+function defaultDB(){
+  return {
+    v:1,
+    settings:{cur:'$', mood:'sunrise', name:'', method:'snowball', monthlyBudget:800, customOrder:[], efTarget:1000},
+    why:'',
+    debts:[], payments:[],
+    budget:{incomes:[], expenses:[]},
+    efund:{contribs:[]},
+    funds:[],
+    scores:[],
+    wins:[],
+    milestones:[]
+  };
+}
+function normalizeDB(d){
+  const base = defaultDB();
+  const out = Object.assign({}, base, d);
+  out.settings = Object.assign({}, base.settings, d.settings || {});
+  for(const k of ['debts','payments','funds','scores','wins','milestones']){
+    if(!Array.isArray(out[k])) out[k] = [];
+  }
+  if(!out.budget || typeof out.budget !== 'object') out.budget = {incomes:[], expenses:[]};
+  if(!Array.isArray(out.budget.incomes))  out.budget.incomes  = [];
+  if(!Array.isArray(out.budget.expenses)) out.budget.expenses = [];
+  if(!out.efund || typeof out.efund !== 'object') out.efund = {contribs:[]};
+  if(!Array.isArray(out.efund.contribs)) out.efund.contribs = [];
+  if(!Array.isArray(out.settings.customOrder)) out.settings.customOrder = [];
+  if(typeof out.why !== 'string') out.why = '';
+  return out;
+}
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+  catch(e){ toast('Could not save — storage may be full'); }
+}
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    db = raw ? normalizeDB(JSON.parse(raw)) : defaultDB();
+  }catch(e){ db = defaultDB(); }
+}
+let db = defaultDB();
+
+/* ---------- demo data (realistic, original) ---------- */
+function demoData(){
+  const d = defaultDB();
+  d.settings.monthlyBudget = 950;
+  d.settings.name = 'Jordan';
+  d.settings.efTarget = 1000;
+  d.why = 'I want to wake up without the weight of bills on my chest — and take my kids to the ocean next summer without a single credit card in my wallet.';
+  const T = new Date(); const CY = T.getFullYear(), CM = T.getMonth();
+  const dim = daysInMk(mkOf(T));
+  const dIso = (y,m,day) => y+'-'+pad2(m+1)+'-'+pad2(Math.min(day,daysInMk(y+'-'+pad2(m+1))));
+  const mAgo = n => mkAdd(mkOf(T), -n);
+
+  const d1=uid(), d2=uid(), d3=uid(), d4=uid(), d5=uid();
+  d.debts = [
+    {id:d1, name:'Visa Platinum',        kind:'credit_card', creditor:'First National Bank', start:6200, balance:4180, rate:22.9, minPay:125, dueDay:12, color:'#C0575B', paidOff:null},
+    {id:d2, name:'Store Card',           kind:'credit_card', creditor:'HomeStyle Store',     start:1350, balance:610,  rate:27.9, minPay:35,  dueDay:5,  color:'#C25E7A', paidOff:null},
+    {id:d3, name:'Car Loan',             kind:'auto',        creditor:'DriveNow Credit',     start:14800, balance:9450, rate:7.4,  minPay:310, dueDay:20, color:'#9A6A22', paidOff:null},
+    {id:d4, name:'Student Loan',         kind:'student',     creditor:'EduLend Services',    start:21000, balance:17300, rate:5.8, minPay:210, dueDay:25, color:'#45789E', paidOff:null},
+    {id:d5, name:'Medical Bill — Clinic',kind:'medical',     creditor:'Riverside Clinic',    start:900,  balance:0,    rate:0,    minPay:50,  dueDay:8,  color:'#3E8E6E', paidOff: dIso(CY, CM, Math.max(1,Math.min(8,dim)))}
+  ];
+  /* payments across the last 7 months — each one also drove balances down */
+  const pay = [];
+  const hist = [
+    /* [monthsAgo, debtId, principal, interest, day] */
+    [6, d2, 90,  21, 5],  [6, d1, 140, 96, 12], [6, d3, 260, 91, 20], [6, d4, 210, 101, 25], [6, d5, 75, 0, 8],
+    [5, d2, 95,  19, 5],  [5, d1, 145, 92, 12], [5, d3, 262, 89, 20], [5, d4, 211, 100, 25], [5, d5, 90, 0, 8],
+    [4, d2, 100, 17, 5],  [4, d1, 150, 88, 12], [4, d3, 265, 86, 20], [4, d4, 212, 99, 25],  [4, d5, 105, 0, 8],
+    [3, d2, 105, 15, 5],  [3, d1, 160, 84, 12], [3, d3, 268, 84, 20], [3, d4, 213, 97, 25],  [3, d5, 120, 0, 8],
+    [2, d2, 110, 12, 5],  [2, d1, 175, 79, 12], [2, d3, 270, 81, 20], [2, d4, 214, 96, 25],  [2, d5, 130, 0, 8],
+    [1, d2, 115, 10, 5],  [1, d1, 190, 74, 12], [1, d3, 272, 79, 20], [1, d4, 215, 94, 25],
+    [0, d2, 120, 8,  5],  [0, d1, 205, 70, 12], [0, d3, 275, 76, 20], [0, d4, 216, 93, 25]
+  ];
+  for(const [mA, debt, amt, int, day] of hist){
+    const mk = mAgo(mA);
+    pay.push({id:uid(), debtId:debt, date: mk+'-'+pad2(Math.min(day, daysInMk(mk))), amount:amt, interest:int, note:''});
+  }
+  d.payments = pay.sort((a,b)=> a.date<b.date?1:-1);
+
+  d.budget = {
+    incomes:  [{id:uid(), name:'Salary — full time',  amount:3050},
+               {id:uid(), name:'Weekend freelance',   amount:340}],
+    expenses: [{id:uid(), name:'Rent & utilities',    amount:1390},
+               {id:uid(), name:'Groceries & transport',amount:520},
+               {id:uid(), name:'Phone & subscriptions',amount:85},
+               {id:uid(), name:'Minimum debt payments',amount:680}]
+  };
+
+  d.efund = {contribs:[
+    {id:uid(), date:dIso(CY,CM-2,6),  amount:120},
+    {id:uid(), date:dIso(CY,CM-1,6),  amount:150},
+    {id:uid(), date:dIso(CY,CM,Math.max(1,Math.min(6,dim))), amount:180}
+  ]};
+  d.funds = [
+    {id:uid(), name:'Car maintenance', target:600, saved:240, color:'#45789E'},
+    {id:uid(), name:'Holiday gifts',   target:400, saved:130, color:'#74639F'},
+    {id:uid(), name:'Annual insurance',target:520, saved:390, color:'#3E8E6E'}
+  ];
+
+  d.scores = [
+    {id:uid(), date:dIso(CY,CM-6,2),  score:598, bureau:'Experian',  note:'Started the journey'},
+    {id:uid(), date:dIso(CY,CM-4,2),  score:621, bureau:'Experian',  note:'Two cards under 50%'},
+    {id:uid(), date:dIso(CY,CM-2,2),  score:649, bureau:'Experian',  note:'Store card almost gone'},
+    {id:uid(), date:dIso(CY,CM,2),    score:664, bureau:'Experian',  note:'Clinic bill paid in full'}
+  ];
+
+  d.wins = [
+    {id:uid(), date:dIso(CY,CM-3,14), title:'First $1,000 gone', note:'Cut takeout to twice a month and threw every spare dollar at the Visa. It felt impossible until it felt routine.'},
+    {id:uid(), date:dIso(CY,CM-1,9),  title:'Sold the old bike', note:'$220 straight to the store card. The garage is lighter and so is the balance.'},
+    {id:uid(), date:dIso(CY,CM,3),    title:'Clinic bill: PAID', note:'Nine months of $75 chunks and it is finally done. One less envelope in the drawer.'}
+  ];
+
+  d.milestones = [
+    {id:uid(), title:'No-spend weekend challenge', note:'Four weekends in a row, fun built from what we already own.', done:true,  date:dIso(CY,CM-2,28)},
+    {id:uid(), title:'Balance under $25,000',     note:'The big mental barrier — every debt under control.',            done:false, date:''}
+  ];
+
+  return d;
+}
+
+/* ============================================================
+   APP STATE + DISPATCH ENGINE
+   ============================================================ */
+let curView = 'dashboard';
+const RENDER = {}, ACT = {}, CHG = {}, INP = {};
+let payFilters = {mk: mkOf(TODAY), debt: ''};
+let calY = TODAY.getFullYear(), calM = TODAY.getMonth(), calSel = todayIso();
+let debtFilter = 'active', debtSort = 'balance';
+let simExtraView = 0;
+
+function renderView(){
+  const fn = RENDER[curView];
+  if(fn){ try{ fn(); }catch(err){ console.error(err); toast('Something went wrong drawing this page'); } }
+  updateBadges();
+}
+function go(v){
+  if(!RENDER[v]) return;
+  curView = v;
+  $$('.view').forEach(s => s.classList.toggle('active', s.id === 'view-'+v));
+  $$('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === v));
+  closeMore();
+  window.scrollTo({top:0, behavior:'auto'});
+  renderView();
+}
+ACT['go'] = el => { if(el.dataset.to) go(el.dataset.to); };
+
+/* more menu */
+function closeMore(){ const w=$('navMoreWrap'); if(w){ w.classList.remove('open'); $('navMore').setAttribute('aria-expanded','false'); } }
+ACT['more-toggle'] = () => {
+  const w = $('navMoreWrap'); const open = w.classList.toggle('open');
+  $('navMore').setAttribute('aria-expanded', String(open));
+  if(open){
+    const m = $('moreMenu'); const r = $('navMore').getBoundingClientRect();
+    m.style.top = (r.bottom + 8) + 'px';
+    m.style.left = '';
+    const mw = m.offsetWidth || 420;
+    let left = r.right - mw; if(left < 8) left = 8;
+    m.style.left = left + 'px';
+  }
+};
+document.addEventListener('click', e => {
+  const w = $('navMoreWrap');
+  if(w && w.classList.contains('open') && !e.target.closest('#navMoreWrap')) closeMore();
+}, true);
+
+/* global click / change / input delegation */
+document.addEventListener('click', e => {
+  const tset = e.target.closest('[data-theme-set]');
+  if(tset){ setMood(tset.dataset.themeSet); return; }
+  const nv = e.target.closest('[data-view]');
+  if(nv){ go(nv.dataset.view); return; }
+  const el = e.target.closest('[data-act]');
+  if(el){ const fn = ACT[el.dataset.act]; if(fn) fn(el, e); }
+});
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-chg]');
+  if(el){ const fn = CHG[el.dataset.chg]; if(fn) fn(el); }
+});
+function fireInp(el, enter){
+  if(!el) return;
+  const fn = INP[el.dataset.inp];
+  if(fn) fn(el, enter);
+}
+document.addEventListener('input',  e => { if(e.target.closest('[data-inp]')) fireInp(e.target.closest('[data-inp]'), false); });
+document.addEventListener('keydown',e => {
+  if(e.key === 'Enter' && e.target.closest('[data-inp]')){ e.preventDefault(); fireInp(e.target.closest('[data-inp]'), true); }
+  if(e.key === 'Escape') closeModal();
+});
+
+/* ---------- modal ---------- */
+function openModal(html){ $('modalBody').innerHTML = html; $('modalOv').classList.add('on'); }
+function closeModal(){ $('modalOv').classList.remove('on'); }
+ACT['modal-close'] = () => closeModal();
+$('modalOv').addEventListener('click', e => { if(e.target === $('modalOv')) closeModal(); });
+function confirmModal(title, bodyHtml, btnLabel, actName, data){
+  openModal(`<h3>${title}</h3><div class="sm" style="line-height:1.65">${bodyHtml}</div>
+    <div class="modal-actions">
+      <button class="btn" data-act="modal-close">Cancel</button>
+      <button class="btn armed" data-act="${actName}" ${data||''}>${btnLabel}</button>
+    </div>`);
+}
+
+/* ---------- toast ---------- */
+let toastTimer = null;
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> t.classList.remove('on'), 2400);
+}
+
+/* ---------- theme ---------- */
+function setMood(mood){
+  db.settings.mood = mood;
+  document.documentElement.dataset.theme = mood;
+  $$('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.themeSet === mood));
+  save(); renderView();
+}
+
+/* ---------- badges ---------- */
+function updateBadges(){
+  const setBadge = (name, n, soft) => {
+    const el = document.querySelector(`[data-badge="${name}"]`);
+    if(el){
+      el.textContent = n > 0 ? (n > 99 ? '99+' : n) : '';
+      el.classList.toggle('on', n > 0);
+      el.classList.toggle('soft', !!soft);
+    }
+  };
+  const thisMk = mkOf(TODAY);
+  setBadge('debts', activeDebts().length, true);
+  setBadge('pay', db.payments.filter(p => p.date.slice(0,7) === thisMk).length, true);
+  setBadge('due', duesWithin(7).length, false);
+}
+
+/* ---------- shared builders ---------- */
+function viewHead(overline, title, sub, actions){
+  return `<div class="view-head">
+    <div><div class="overline">${overline}</div>
+      <h2 class="view-title">${title}</h2>
+      ${sub ? `<div class="view-sub">${sub}</div>` : ''}
+    </div>
+    <div class="view-actions">${actions || ''}</div>
+  </div>`;
+}
+function bar(cur0, max, cls){
+  const pct = max > 0 ? clamp(cur0/max*100, 0, 100) : 0;
+  return `<div class="bar"><i class="${cls||''}" style="width:${pct.toFixed(1)}%"></i></div>`;
+}
+function debtOptions(selected, activeOnly){
+  return db.debts
+    .filter(d => !activeOnly || (!d.paidOff && d.balance > 0))
+    .map(d => `<option value="${d.id}" ${selected===d.id?'selected':''}>${esc(d.name)}</option>`).join('');
+}
+function firstName(){
+  const n = (db.settings.name||'').trim();
+  return n ? n.split(/\s+/)[0] : '';
+}
+
+/* ============================================================
+   THE HERO ILLUSTRATION — sunrise road to debt freedom
+   (original inline SVG, re-themes with the accent moods)
+   ============================================================ */
+function heroArtSVG(compact){
+  const h = compact ? 150 : 230;
+  return `<svg viewBox="0 0 560 ${h}" preserveAspectRatio="xMidYMax slice" role="img" aria-label="A road winding toward a rising sun">
+    <defs>
+      <linearGradient id="jhgSky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="var(--mast1)"/><stop offset="1" stop-color="var(--mast2)"/>
+      </linearGradient>
+      <linearGradient id="jhgSun" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F6C77A"/><stop offset="1" stop-color="#EFA35E"/>
+      </linearGradient>
+    </defs>
+    <rect x="0" y="0" width="560" height="${h}" fill="url(#jhgSky)"/>
+    <!-- sun + halo -->
+    <circle cx="404" cy="${h*0.52}" r="${h*0.30}" fill="#F6C77A" opacity=".28"/>
+    <circle cx="404" cy="${h*0.52}" r="${h*0.21}" fill="#F6C77A" opacity=".45"/>
+    <circle cx="404" cy="${h*0.52}" r="${h*0.135}" fill="url(#jhgSun)"/>
+    <!-- back hills -->
+    <path d="M0 ${h*0.72} Q 90 ${h*0.52} 190 ${h*0.70} T 380 ${h*0.68} T 560 ${h*0.62} V ${h} H 0 Z" fill="var(--navy-soft)" opacity=".55"/>
+    <!-- front hills -->
+    <path d="M0 ${h*0.84} Q 120 ${h*0.66} 240 ${h*0.84} T 460 ${h*0.82} T 560 ${h*0.78} V ${h} H 0 Z" fill="var(--navy-soft)"/>
+    <!-- ground -->
+    <path d="M0 ${h*0.92} Q 140 ${h*0.80} 300 ${h*0.90} T 560 ${h*0.88} V ${h} H 0 Z" fill="var(--panel)"/>
+    <!-- winding road to the flag -->
+    <path d="M60 ${h} C 140 ${h*0.86}, 90 ${h*0.80}, 170 ${h*0.76} S 300 ${h*0.72}, 330 ${h*0.66} S 380 ${h*0.60}, 404 ${h*0.565}"
+      fill="none" stroke="var(--navy)" stroke-width="7" stroke-linecap="round" opacity=".9"/>
+    <path d="M60 ${h} C 140 ${h*0.86}, 90 ${h*0.80}, 170 ${h*0.76} S 300 ${h*0.72}, 330 ${h*0.66} S 380 ${h*0.60}, 404 ${h*0.565}"
+      fill="none" stroke="#FFFFFF" stroke-width="1.6" stroke-dasharray="7 8" stroke-linecap="round" opacity=".75"/>
+    <!-- milestone flags along the road -->
+    <g stroke="var(--navy-deep)" stroke-width="2" stroke-linecap="round">
+      <line x1="170" y1="${h*0.76}" x2="170" y2="${h*0.665}"/><path d="M170 ${h*0.665} h12 l-4 5 4 5 h-12 z" fill="var(--gold)" stroke="none"/>
+      <line x1="300" y1="${h*0.715}" x2="300" y2="${h*0.615}"/><path d="M300 ${h*0.615} h14 l-4.5 5.5 4.5 5.5 h-14 z" fill="var(--sage)" stroke="none"/>
+    </g>
+    <!-- summit flag on the sun -->
+    <line x1="404" y1="${h*0.555}" x2="404" y2="${h*0.40}" stroke="var(--navy-deep)" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M404 ${h*0.40} h20 l-6.5 7.5 6.5 7.5 h-20 z" fill="var(--navy)" stroke="none"/>
+    <!-- walker -->
+    <g transform="translate(64,${h-16})" stroke="var(--mast-ink)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+      <circle cx="0" cy="-16" r="3.4"/><path d="M0 -12.5 V-4 M0 -10 l-5 3 M0 -10 l5 -2.5 M0 -4 l-4 6.5 M0 -4 l4 6.5"/>
+    </g>
+    <!-- birds -->
+    <g stroke="var(--mast-ink)" stroke-width="1.7" stroke-linecap="round" fill="none" opacity=".65">
+      <path d="M470 ${h*0.24} q4 -4 8 0 q4 -4 8 0"/>
+      <path d="M498 ${h*0.32} q3.4 -3.4 6.8 0 q3.4 -3.4 6.8 0"/>
+    </g>
+    <!-- clouds -->
+    <g fill="#FFFFFF" opacity=".8">
+      <ellipse cx="120" cy="${h*0.22}" rx="34" ry="9"/><ellipse cx="148" cy="${h*0.18}" rx="24" ry="7.5"/>
+      <ellipse cx="300" cy="${h*0.14}" rx="27" ry="7.5"/>
+    </g>
+  </svg>`;
+}
+
+/* ============================================================
+   VIEW 1 · DASHBOARD — the journey at a glance
+   ============================================================ */
+RENDER.dashboard = function(){
+  const el = $('view-dashboard');
+  if(db.debts.length === 0){ el.innerHTML = welcomeHero(); return; }
+  const t = totals(), p = payTotals();
+  const method = db.settings.method || 'snowball';
+  const sim = payoffSim(method, db.settings.monthlyBudget);
+  const order = orderedDebts(method);
+  const focus = order[0] || null;
+  const greet = firstName() ? firstName()+', ' : '';
+  const freePct = Math.round(t.pctFree);
+  const mksDone = computedMilestones().filter(m=>m.done).length;
+
+  const trend = balanceTrend(12);
+  const pm = paymentsByMonth(12);
+
+  el.innerHTML = `
+  <div class="jhero">
+    <div class="jhero-txt">
+      <div class="ov">Your debt-free journey</div>
+      <h2>${esc(greet)}you are <em>${freePct}% free.</em></h2>
+      <div class="jh-sub"><b>${fmtM(t.balTotal)}</b> still stands between you and the finish line — and <b>${fmtM(t.paidTotal)}</b> is already behind you. ${sim.feasible ? 'Keep the pace: freedom lands around <b>'+mkLabelFull(sim.freeDate.slice(0,7))+'</b>.' : 'Your monthly budget is below the minimums — visit the Payoff Plan to raise it.'}</div>
+      <div class="jh-chips">
+        <span class="jh-chip">Debt remaining <b>${fmtM(t.balTotal)}</b></span>
+        <span class="jh-chip">Paid off <b>${fmtM(t.paidTotal)}</b></span>
+        <span class="jh-chip">Freedom date <b>${sim.feasible ? mkLabel(sim.freeDate.slice(0,7)) : '—'}</b></span>
+        <span class="jh-chip">Milestones <b>${mksDone}</b></span>
+      </div>
+      <div class="jh-actions">
+        <button class="btn btn-primary" data-act="pay-new">${icon('plus')} Log a payment</button>
+        <button class="btn" data-act="go" data-to="plan">${icon('route')} Open payoff plan</button>
+        <button class="btn" data-act="go" data-to="milestones">${icon('trophy')} Milestones</button>
+      </div>
+    </div>
+    <div class="jhero-art">${heroArtSVG(false)}</div>
+  </div>
+
+  <div class="fgrid">
+    <div class="fcard fd-title-card">
+      <div class="fhead fh-terra"><span class="fht">Debt Dashboard</span><span class="fh-sub">live</span></div>
+      <div class="fbody">
+        <div class="fd-big">Watch the balance <em>melt</em>.</div>
+        <div class="fd-note">Every card on this page recomputes itself the moment you log a payment, edit a debt or change your plan.</div>
+        <button class="btn btn-soft btn-sm" style="margin-top:8px;align-self:flex-start" data-act="debt-new">${icon('plus')} Add a debt</button>
+      </div>
+    </div>
+    ${fkpi('fh-red','Debt Remaining', fmtM(t.balTotal), 'v-debt', kindSummary())}
+    ${fkpi('fh-teal','Paid Off So Far', fmtM(t.paidTotal), 'v-paid', freePct+'% of the journey done')}
+    ${fkpi('fh-terra','Payments This Month', fmtM(p.thisMonth), 'v-free', p.count+' payments logged in total')}
+    ${fkpi('fh-gold','Interest Accruing / mo', fmtM(t.moInterest), 'v-debt', 'avg APR '+(t.avgApr ? t.avgApr.toFixed(1)+'%' : '—'))}
+
+    <div class="fcard"><div class="fhead fh-terra"><span class="fht">Total Balance Trend</span><span class="fh-sub">12 mo</span></div>
+      <div class="fbody"><div id="dbTrend"></div></div></div>
+    <div class="fcard"><div class="fhead fh-teal"><span class="fht">Payments by Month</span><span class="fh-sub">12 mo</span></div>
+      <div class="fbody"><div id="dbPayBars"></div></div></div>
+    <div class="fcard"><div class="fhead fh-red"><span class="fht">Debt Composition</span><span class="fh-sub">now</span></div>
+      <div class="fbody"><div id="dbDonut"></div></div></div>
+
+    <div class="fcard span2r"><div class="fhead fh-gold"><span class="fht">Progress by Debt</span><span class="fh-sub">paid vs left</span></div>
+      <div class="fbody" style="justify-content:flex-start"><div class="toe-wrap" id="dbPerDebt"></div></div></div>
+    <div class="fcard"><div class="fhead fh-terra"><span class="fht">Focus Debt · ${method === 'avalanche' ? 'highest APR' : method === 'custom' ? 'your order' : 'smallest balance'}</span><span class="fh-sub">${focus ? esc(focus.name) : 'none'}</span></div>
+      <div class="fbody" id="dbFocus"></div></div>
+    <div class="fcard"><div class="fhead fh-plum"><span class="fh-sub">plan pace</span><span class="fht" style="text-align:right">Emergency Fund</span></div>
+      <div class="fbody" id="dbEfund"></div></div>
+
+    <div class="fcard fullrow"><div class="fhead fh-teal"><span class="fht">Upcoming Due Payments · ${mkLabelFull(mkOf(TODAY))}</span><span class="fh-sub">auto from due days</span></div>
+      <div class="fbody" style="justify-content:flex-start"><div class="due-strip" id="dbDue"></div></div></div>
+  </div>
+
+  <div class="dash-grid" style="margin-top:18px">
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Recent payments</div>
+        <button class="btn btn-sm" data-act="go" data-to="payments">See all</button></div>
+      <div id="dbRecent"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Next milestone</div>
+        <button class="btn btn-sm" data-act="go" data-to="milestones">All</button></div>
+      <div id="dbMstone"></div>
+    </div>
+  </div>`;
+
+  renderDashCharts(trend, pm, t, sim, focus);
+};
+
+function fkpi(headCls, title, val, valCls, sub){
+  return `<div class="fcard fkpi">
+    <div class="fhead ${headCls}"><span class="fht">${title}</span></div>
+    <div class="fbody"><span class="fv ${valCls}">${val}</span><span class="fl">${sub||''}</span></div>
+  </div>`;
+}
+function kindSummary(){
+  const act = activeDebts();
+  if(!act.length) return 'debt free — celebrate!';
+  const kinds = {};
+  for(const d of act) kinds[kindLabel(d.kind)] = (kinds[kindLabel(d.kind)]||0)+1;
+  return Object.entries(kinds).map(([k,n])=> n+' '+k.toLowerCase()+(n>1?'s':'')).join(' · ');
+}
+function welcomeHero(){
+  return `<div class="hero">
+    <div class="ov">Welcome to your debt payoff journey</div>
+    <h2>Every payment is a step <em>out of the red.</em></h2>
+    <p class="hero-sub">List your debts, pick a snowball or avalanche plan, log payments and watch the freedom date get closer — all offline, all yours, all private.</p>
+    <div style="margin:18px 0 4px;max-width:520px">${heroArtSVG(true)}</div>
+    <div class="welcome-actions">
+      <button class="btn btn-primary" data-act="demo-load">${icon('spark')} Load demo data</button>
+      <button class="btn" data-act="debt-new">${icon('plus')} Add first debt</button>
+      <button class="btn" data-act="go" data-to="settings">${icon('gear')} Settings</button>
+    </div>
+  </div>`;
+}
+function renderDashCharts(trend, pm, t, sim, focus){
+  const small = {w:340, h:172, fs:9.5};
+  chartLines('dbTrend', trend.labels, [
+    {name:'Balance', color:'#C0575B', data:trend.series, area:true}
+  ], small);
+  chartBars('dbPayBars', pm.labels, [
+    {name:'Payments', color:'#3E8E6E', data:pm.data}
+  ], small);
+  chartDonut('dbDonut',
+    activeDebts().map(d => ({label:d.name, value:d.balance, color:d.color||'#C4643B'})),
+    `<b>${fshort(t.balTotal)}</b><small>left</small>`);
+
+  /* per-debt progress rows */
+  const rows = db.debts.slice().sort((a,b)=> b.balance-a.balance);
+  $('dbPerDebt').innerHTML = rows.length ? rows.map(d => {
+    const paidPct = d.start > 0 ? clamp((d.start - d.balance)/d.start*100, 0, 100) : 0;
+    const done = d.paidOff || d.balance <= 0.004;
+    return `<div class="mini-bar" style="padding:7px 0">
+      <span class="mb-l" style="width:110px">${esc(d.name)}</span>
+      <div class="bar" style="height:9px"><i class="${done?'ok':''}" style="width:${paidPct.toFixed(1)}%;background:${done?'var(--sage)':(d.color||'var(--navy-soft)')}"></i></div>
+      <span class="mb-v" style="width:110px">${done ? 'paid off ✓' : fmtM(Math.max(0,d.balance))+' left · '+Math.round(paidPct)+'%'}</span>
+    </div>`;
+  }).join('') : '<div class="empty">No debts yet — the breakdown appears as you add them.</div>';
+
+  /* focus debt card */
+  if(focus){
+    const pd = sim.perDebt[focus.id];
+    const monthsTxt = pd && pd.months ? pd.months+' mo under the current plan' : '—';
+    $('dbFocus').innerHTML = `
+      <span class="chip-label">throw extra money here first</span>
+      <div class="bignum" style="color:var(--oxb)">${fmtM(focus.balance)}</div>
+      <div class="sm mut" style="margin-top:3px;line-height:1.6">APR <b>${(focus.rate||0).toFixed(1)}%</b> · min ${fmtM(focus.minPay)} · due day ${focus.dueDay||'—'}<br>Projected payoff: <b>${monthsTxt}</b></div>
+      <div style="margin-top:10px">${bar(focus.start-focus.balance, focus.start, 'over')}</div>
+      <div class="sm mut" style="margin-top:5px">${fmtM(focus.start-focus.balance)} of ${fmtM(focus.start)} paid</div>
+      <button class="btn btn-primary btn-sm" style="margin-top:10px;align-self:flex-start" data-act="pay-new" data-debt="${focus.id}">${icon('plus')} Log payment</button>`;
+  } else {
+    $('dbFocus').innerHTML = `<div class="empty">No open debts — you did it! 🎉</div>`;
+  }
+
+  /* emergency fund mini */
+  const efT = Math.max(1, num(db.settings.efTarget, 1000));
+  const efS = efundSaved();
+  $('dbEfund').innerHTML = `
+    <span class="chip-label">starter fund</span>
+    <div class="bignum">${fmtM(efS)} <em>/ ${fmtM(efT)}</em></div>
+    <div style="margin-top:9px">${bar(efS, efT, efS >= efT ? 'ok' : 'warn')}</div>
+    <div class="sm mut" style="margin-top:6px">${efS >= efT ? 'Starter fund complete — every spare dollar can hit debt now.' : 'A small cushion keeps surprises from becoming new debt.'}</div>
+    <button class="btn btn-sm" style="margin-top:9px;align-self:flex-start" data-act="go" data-to="efund">Open fund</button>`;
+
+  /* upcoming dues strip */
+  const dues = duesInMk(mkOf(TODAY));
+  $('dbDue').innerHTML = dues.length ? `<div class="grid3" style="width:100%">${dues.map(x => `
+    <div class="goal-card">
+      <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+        <b style="font-size:12.5px">${esc(x.debt.name)}</b>
+        <span class="pill ${diffD(x.date, todayIso()) <= 3 ? 'red' : 'gold'}">${fmtDate(x.date)}</span>
+      </div>
+      <div class="sm mut" style="margin-top:4px">min ${fmtM(x.debt.minPay)} · APR ${(x.debt.rate||0).toFixed(1)}%</div>
+      <div style="margin-top:8px"><button class="btn btn-soft btn-sm" data-act="pay-new" data-debt="${x.debt.id}">${icon('check')} Log it</button></div>
+    </div>`).join('')}</div>`
+  : '<div class="empty">No open debts with due days — add due days on the My Debts page to see this strip fill.</div>';
+
+  /* recent payments */
+  const recent = db.payments.slice().sort((a,b)=> a.date<b.date?1:-1).slice(0,6);
+  $('dbRecent').innerHTML = recent.length ? recent.map(p => {
+    const d = debtById(p.debtId);
+    return `<div class="txrow">
+      <span class="txdot" style="background:${d ? (d.color||'#C4643B') : 'var(--faint)'}"></span>
+      <div class="tx-main"><div class="tx-name">${esc(d ? d.name : 'Deleted debt')}</div>
+      <div class="tx-meta">${fmtDate(p.date)}${p.interest ? ' · +'+fmtM(p.interest)+' interest' : ''}${p.note ? ' · '+esc(p.note) : ''}</div></div>
+      <span class="tx-amt pos">−${fmtM(p.amount)}</span>
+    </div>`;
+  }).join('') : '<div class="empty">No payments logged yet — your first one starts the trend line.</div>';
+
+  /* next milestone */
+  const msList = computedMilestones();
+  const next = msList.find(m => !m.done);
+  const doneN = msList.filter(m=>m.done).length;
+  $('dbMstone').innerHTML = next ? `
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <span class="ms-ico gold">${icon(next.icon||'trophy')}</span>
+      <div class="ms-main"><div class="ms-t">${esc(next.title)}</div>
+      <div class="ms-s">${esc(next.sub||'')}</div>
+      <div class="ms-body">${next.pct != null ? bar(next.pct, 100, 'warn') : ''}</div></div>
+    </div>
+    <div class="sm mut" style="margin-top:10px">${doneN} milestone${doneN===1?'':'s'} unlocked so far — ${msList.length - doneN} to go.</div>`
+  : '<div class="empty">Every milestone unlocked — write the next dream in Motivation.</div>';
+}
+
+/* ============================================================
+   VIEW 2 · MY DEBTS — the full ledger of what you owe
+   ============================================================ */
+let debtColor = DEEPS[0];
+RENDER.debts = function(){
+  const t = totals(), p = payTotals();
+  let list = db.debts.slice();
+  if(debtFilter === 'active')  list = list.filter(d => !d.paidOff && d.balance > 0.004);
+  if(debtFilter === 'paid')    list = list.filter(d => d.paidOff || d.balance <= 0.004);
+  const sorters = {
+    balance:(a,b)=> b.balance-a.balance,
+    apr:    (a,b)=> (b.rate||0)-(a.rate||0),
+    due:    (a,b)=> (a.dueDay||99)-(b.dueDay||99),
+    name:   (a,b)=> a.name.localeCompare(b.name)
+  };
+  list.sort(sorters[debtSort] || sorters.balance);
+
+  const head = viewHead('Face the numbers',
+    'My <em>Debts</em>',
+    `<b>${activeDebts().length}</b> open · <b>${fmtM(t.balTotal)}</b> remaining · minimums ${fmtM(t.minTotal)}/mo`,
+    `<button class="btn btn-primary" data-act="debt-new">${icon('plus')} Add debt</button>`);
+
+  const kpis = `<div class="kpis">
+    ${kpiCard('k-red','card','Total original', fmtM(t.startTotal), 'what you started with')}
+    ${kpiCard('k-teal','trend','Total paid', fmtM(t.paidTotal), Math.round(t.pctFree)+'% of the journey')}
+    ${kpiCard('k-peach','coins','Interest / month', fmtM(t.moInterest), 'avg APR '+(t.avgApr ? t.avgApr.toFixed(1)+'%' : '—'))}
+    ${kpiCard('k-blue','flag','Paid-off debts', String(db.debts.filter(d=>d.paidOff||d.balance<=0.004).length), 'each one worth a celebration')}
+  </div>`;
+
+  const filters = `<div class="filterbar">
+    <div class="seg">
+      <button data-act="debt-filter" data-t="active" class="${debtFilter==='active'?'on':''}">Active</button>
+      <button data-act="debt-filter" data-t="paid" class="${debtFilter==='paid'?'on':''}">Paid off</button>
+      <button data-act="debt-filter" data-t="all" class="${debtFilter==='all'?'on':''}">All</button>
+    </div>
+    <div class="field" style="max-width:190px"><span>SORT BY</span>
+      <select class="in" data-chg="debt-sort">
+        <option value="balance" ${debtSort==='balance'?'selected':''}>Largest balance</option>
+        <option value="apr" ${debtSort==='apr'?'selected':''}>Highest APR</option>
+        <option value="due" ${debtSort==='due'?'selected':''}>Due day</option>
+        <option value="name" ${debtSort==='name'?'selected':''}>Name</option>
+      </select></div>
+  </div>`;
+
+  const cards = list.length ? `<div class="debt-grid">${list.map(d => debtCard(d)).join('')}</div>`
+    : `<div class="panel"><div class="empty">${db.debts.length ? 'Nothing in this filter.' : 'No debts listed yet — add your first one and the whole tracker comes alive.'}</div></div>`;
+
+  el().innerHTML = head + kpis + filters + cards;
+};
+function el(){ return $('view-'+curView); }
+function kpiCard(cls, ic, label, val, sub){
+  return `<div class="kpi ${cls}"><span class="kico">${icon(ic)}</span><b>${val}</b><span>${esc(label)}${sub?' · '+esc(sub):''}</span></div>`;
+}
+function debtCard(d){
+  const done = d.paidOff || d.balance <= 0.004;
+  const paidPct = d.start > 0 ? clamp((d.start - Math.max(d.balance,0))/d.start*100, 0, 100) : 0;
+  return `<div class="debt-card ${done?'done':''}" style="--dc:${d.color||'var(--navy-soft)'}">
+    <div class="dc-top">
+      <div style="min-width:0">
+        <div class="dc-name ${done?'strike':''}">${esc(d.name)}</div>
+        <div class="dc-cred">${esc(d.creditor || kindLabel(d.kind))} · ${kindLabel(d.kind)}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex:0 0 auto">
+        ${done ? '<span class="pill teal"><span class="pdot"></span>paid off</span>' : `<span class="pill red"><span class="pdot"></span>${(d.rate||0).toFixed(1)}% APR</span>`}
+      </div>
+    </div>
+    <div class="dc-bal ${done?'strike':''}">${fmtM(Math.max(0,d.balance))} ${done ? '' : `<small>left of ${fmtM(d.start)}</small>`}</div>
+    ${done
+      ? `<div class="ms-date" style="margin:6px 0 2px">Paid in full ${d.paidOff ? '· '+fmtDateY(d.paidOff) : ''} ✿</div>`
+      : `<div style="margin-top:9px">${bar(d.start-d.balance, d.start, paidPct>=75?'ok':paidPct>=25?'':'warn')}</div>
+         <div class="sm mut" style="margin-top:5px">${Math.round(paidPct)}% paid · ${fmtM(d.start-Math.max(d.balance,0))} gone</div>`}
+    <div class="dc-grid">
+      <div class="dc-cell"><span>MIN PAYMENT</span><b>${fmtM(d.minPay)}/mo</b></div>
+      <div class="dc-cell"><span>DUE DAY</span><b>${d.dueDay ? 'the '+d.dueDay+'th' : '—'}</b></div>
+      <div class="dc-cell"><span>APR</span><b>${(d.rate||0).toFixed(1)}%</b></div>
+      <div class="dc-cell"><span>INTEREST/MO</span><b>${fmtM(Math.max(0,d.balance) * (d.rate||0) / 1200, true)}</b></div>
+    </div>
+    <div class="dc-actions">
+      ${done
+        ? `<button class="btn btn-sm" data-act="debt-reopen" data-id="${d.id}">${icon('up')} Reopen</button>`
+        : `<button class="btn btn-primary btn-sm" data-act="pay-new" data-debt="${d.id}">${icon('check')} Log payment</button>
+           <button class="btn btn-sm" data-act="debt-paid" data-id="${d.id}">${icon('trophy')} Mark paid off</button>`}
+      <button class="btn btn-sm" data-act="debt-edit" data-id="${d.id}">${icon('card')} Edit</button>
+      <button class="icon-btn" data-act="debt-del" data-id="${d.id}" aria-label="Delete debt">${icon('trash')}</button>
+    </div>
+  </div>`;
+}
+function debtModal(id){
+  const d = id ? debtById(id) : null;
+  debtColor = d ? (d.color || DEEPS[db.debts.length % DEEPS.length]) : DEEPS[db.debts.length % DEEPS.length];
+  openModal(`<h3>${d ? 'Edit' : 'Add'} <em>debt</em></h3>
+  <div class="form-grid">
+    <div class="field"><span>NAME</span><input class="in" id="m_name" value="${d?esc(d.name):''}" placeholder="e.g. Visa Platinum"></div>
+    <div class="field"><span>TYPE</span><select class="in" id="m_kind">${DEBT_KINDS.map(k=>`<option value="${k[0]}" ${d&&d.kind===k[0]?'selected':''}>${k[1]}</option>`).join('')}</select></div>
+    <div class="field"><span>CREDITOR</span><input class="in" id="m_cred" value="${d?esc(d.creditor||''):''}" placeholder="bank or lender"></div>
+    <div class="field"><span>ORIGINAL BALANCE</span><input class="in" id="m_start" type="number" min="0" step="0.01" value="${d?d.start:''}" placeholder="0.00"></div>
+    <div class="field"><span>CURRENT BALANCE</span><input class="in" id="m_bal" type="number" min="0" step="0.01" value="${d?Math.max(0,d.balance):''}" placeholder="0.00"></div>
+    <div class="field"><span>APR % (INTEREST RATE)</span><input class="in" id="m_rate" type="number" min="0" max="99" step="0.1" value="${d?d.rate:''}" placeholder="e.g. 19.9"></div>
+    <div class="field"><span>MINIMUM PAYMENT / MO</span><input class="in" id="m_min" type="number" min="0" step="0.01" value="${d?d.minPay:''}" placeholder="0.00"></div>
+    <div class="field"><span>DUE DAY OF MONTH</span><input class="in" id="m_due" type="number" min="1" max="31" value="${d?d.dueDay:''}" placeholder="1–31"></div>
+    <div class="field full"><span>CARD COLOR</span>
+      <div style="display:flex;gap:9px;padding-top:6px;flex-wrap:wrap">
+        ${PASTELS.map((c,i)=>`<button class="theme-dot ${debtColor===DEEPS[i]?'active':''}" data-act="debt-color" data-c="${DEEPS[i]}" style="background:${c}" aria-label="color"></button>`).join('')}
+      </div></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="debt-save" data-id="${id||''}">${icon('check')} Save debt</button>
+  </div>`);
+}
+ACT['debt-new']   = () => debtModal(null);
+ACT['debt-edit']  = el2 => debtModal(el2.dataset.id);
+ACT['debt-color'] = el2 => {
+  debtColor = el2.dataset.c;
+  $$('#modalBody .theme-dot').forEach(x=>x.classList.toggle('active', x.dataset.c===debtColor));
+};
+ACT['debt-save'] = el2 => {
+  const name = $('m_name').value.trim();
+  const start = num($('m_start').value);
+  const bal = num($('m_bal').value);
+  if(!name){ toast('Give the debt a name'); return; }
+  if(start <= 0){ toast('Enter the original balance'); return; }
+  if(bal < 0){ toast('Balance cannot be negative'); return; }
+  const rec = {
+    name, kind:$('m_kind').value, creditor:$('m_cred').value.trim(),
+    start, balance:bal, rate:clamp(num($('m_rate').value),0,99),
+    minPay:Math.max(0, num($('m_min').value)),
+    dueDay:clamp(Math.round(num($('m_due').value)),0,31),
+    color:debtColor
+  };
+  const id = el2.dataset.id;
+  if(id){
+    const d = debtById(id); if(!d) return;
+    Object.assign(d, rec);
+    if(d.balance > 0.004) d.paidOff = null;
+    if(d.balance <= 0.004 && !d.paidOff) d.paidOff = todayIso();
+  } else {
+    db.debts.push(Object.assign({id:uid(), paidOff: bal <= 0.004 ? todayIso() : null}, rec));
+  }
+  save(); closeModal(); renderView(); toast(id ? 'Debt updated' : 'Debt added — facing it is the first win');
+};
+ACT['debt-filter'] = el2 => { debtFilter = el2.dataset.t; RENDER.debts(); };
+CHG['debt-sort'] = el2 => { debtSort = el2.value; RENDER.debts(); };
+ACT['debt-paid'] = el2 => {
+  const d = debtById(el2.dataset.id); if(!d) return;
+  confirmModal('Mark as paid off?',
+    `<b>${esc(d.name)}</b> will show a paid-off badge and move out of the active plan. Its remaining balance will be set to zero.`,
+    'Yes — it\u2019s done', 'debt-paid-yes', `data-id="${d.id}"`);
+};
+ACT['debt-paid-yes'] = el2 => {
+  const d = debtById(el2.dataset.id); if(!d) return;
+  d.balance = 0; d.paidOff = todayIso();
+  save(); closeModal(); renderView(); toast('Paid off — that one is history! ✿');
+};
+ACT['debt-reopen'] = el2 => {
+  const d = debtById(el2.dataset.id); if(!d) return;
+  d.paidOff = null;
+  if(d.balance <= 0.004) d.balance = d.start > 0 ? d.start : 0;
+  save(); renderView(); toast('Debt reopened — update the balance as needed');
+};
+ACT['debt-del'] = el2 => {
+  const d = debtById(el2.dataset.id); if(!d) return;
+  const pays = db.payments.filter(p=>p.debtId===d.id).length;
+  confirmModal('Delete debt?', `<b>${esc(d.name)}</b>${pays ? ` and its <b>${pays}</b> logged payment${pays===1?'':'s'}` : ''} will be removed. This cannot be undone.`,
+    'Delete', 'debt-del-yes', `data-id="${d.id}"`);
+};
+ACT['debt-del-yes'] = el2 => {
+  db.debts = db.debts.filter(d=>d.id!==el2.dataset.id);
+  db.payments = db.payments.filter(p=>p.debtId!==el2.dataset.id);
+  save(); closeModal(); renderView(); toast('Debt removed');
+};
+
+/* ============================================================
+   VIEW 3 · PAYOFF PLAN — snowball, avalanche & the freedom date
+   ============================================================ */
+RENDER.plan = function(){
+  const t = totals();
+  const method = db.settings.method || 'snowball';
+  const budget = Math.max(0, num(db.settings.monthlyBudget));
+  const sim = payoffSim(method, budget);
+  const altMethod = method === 'snowball' ? 'avalanche' : 'snowball';
+  const alt = payoffSim(altMethod, budget);
+  const base = minimumOnlySim();
+  const interestSaved = base.feasible ? Math.max(0, base.interest - sim.interest) : 0;
+  const monthsSaved = base.feasible && base.months > sim.months ? base.months - sim.months : 0;
+  const order = orderedDebts(method);
+  const mpInc = sum(db.budget.incomes.map(x=>x.amount));
+  const mpExp = sum(db.budget.expenses.map(x=>x.amount));
+  const leftPool = Math.max(mpInc - mpExp, t.minTotal);
+
+  const head = viewHead('Draw the route',
+    'Payoff <em>Plan</em>',
+    `<b>${order.length}</b> open debt${order.length===1?'':'s'} · budget <b>${fmtM(budget)}/mo</b> · method <b>${method}</b>`,
+    '');
+
+  const strat = `<div class="panel" style="margin-bottom:18px">
+    <div class="panel-head"><div class="card-title">Strategy</div>
+      <div class="card-sub">change anytime — everything recomputes</div></div>
+    <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+      <div class="seg">
+        <button data-act="plan-method" data-t="snowball" class="${method==='snowball'?'on':''}">Snowball</button>
+        <button data-act="plan-method" data-t="avalanche" class="${method==='avalanche'?'on':''}">Avalanche</button>
+        <button data-act="plan-method" data-t="custom" class="${method==='custom'?'on':''}">Custom</button>
+      </div>
+      <div class="bud-input">
+        <span class="sm mut" style="font-weight:700">MONTHLY DEBT BUDGET</span>
+        <input class="in" type="number" min="0" step="10" value="${budget}" data-inp="plan-budget">
+        <button class="btn btn-sm" data-act="plan-use-leftover">${icon('calc')} Use Money Plan leftover${leftPool >= 0 ? ' ('+fmtM(leftPool)+')' : ''}</button>
+      </div>
+    </div>
+    <div class="sm mut" style="margin-top:9px;line-height:1.6">${method==='snowball'
+      ? '<b>Snowball</b> pays the smallest balance first — quick wins keep you motivated.'
+      : method==='avalanche'
+      ? '<b>Avalanche</b> pays the highest APR first — mathematically the cheapest route.'
+      : '<b>Custom</b> lets you line the debts up in your own order — use the arrows below.'}
+      ${!sim.feasible ? ` <b style="color:var(--oxb)">Heads up: the budget is below the total minimums (${fmtM(t.minTotal)}) — raise it to reach the finish line.</b>` : ''}</div>
+  </div>`;
+
+  const strip = `<div class="sim-strip">
+    <div class="sim-cell"><span>Debt-free date</span><b class="${sim.feasible?'ok':''}">${sim.feasible ? mkLabelFull(sim.freeDate.slice(0,7)) : '—'}</b><small>${sim.feasible ? sim.months+' months from now' : 'budget too low'}</small></div>
+    <div class="sim-cell"><span>Total interest</span><b>${sim.feasible ? fmtM(sim.interest) : '—'}</b><small>until the last payment</small></div>
+    <div class="sim-cell"><span>Interest saved</span><b class="ok">${fmtM(interestSaved)}</b><small>vs minimum-only payments</small></div>
+    <div class="sim-cell"><span>Time saved</span><b class="ok">${monthsSaved ? monthsSaved+' mo' : '—'}</b><small>vs minimum-only payments</small></div>
+  </div>`;
+
+  const orderCard = `<div class="panel">
+    <div class="panel-head"><div class="card-title">Payoff order</div>
+      <div class="card-sub">${method==='custom' ? 'arrows reorder the queue' : order.length ? 'focus on #1' : 'no open debts'}</div></div>
+    <div>${order.length ? order.map((d,i)=>`
+      <div class="order-row ${i===0?'is-focus':''}">
+        <span class="order-n">${i+1}</span>
+        <div class="order-main">
+          <div class="order-t">${esc(d.name)}</div>
+          <div class="order-s">${fmtM(Math.max(0,d.balance))} left · ${(d.rate||0).toFixed(1)}% APR · min ${fmtM(d.minPay)}</div>
+        </div>
+        ${i===0 ? '<span class="order-tag">focus first</span>' : ''}
+        ${method==='custom' ? `<span style="display:flex;gap:4px;flex:0 0 auto">
+          <button class="icon-btn" data-act="plan-move" data-id="${d.id}" data-dir="-1" aria-label="Move up" ${i===0?'disabled':''}>${icon('chevU')}</button>
+          <button class="icon-btn" data-act="plan-move" data-id="${d.id}" data-dir="1" aria-label="Move down" ${i===order.length-1?'disabled':''}>${icon('chevD')}</button>
+        </span>` : ''}
+      </div>`).join('') : '<div class="empty">No open debts — add them on the My Debts page and the order appears here.</div>'}</div>
+  </div>`;
+
+  const chartCard = `<div class="panel">
+    <div class="panel-head"><div class="card-title">Balance curve</div>
+      <div class="card-sub">your plan vs the alternative</div></div>
+    <div id="plChart"></div>
+    <div class="sm mut" style="margin-top:8px;line-height:1.6">The curve assumes interest accrues monthly and every leftover dollar rolls down the queue. Log real payments to keep it honest.</div>
+  </div>`;
+
+  const projCard = `<div class="panel" style="margin-top:18px">
+    <div class="panel-head"><div class="card-title">Per-debt projection</div>
+      <div class="card-sub">under the current plan</div></div>
+    <div style="overflow-x:auto"><table class="tbl">
+      <thead><tr><th>#</th><th>Debt</th><th class="num">Balance</th><th class="num">APR</th><th>Projected payoff</th><th class="num">Interest until payoff</th></tr></thead>
+      <tbody>${order.length ? order.map((d,i)=>{
+        const pd = sim.perDebt[d.id] || {interest:0, months:0};
+        const date = sim.feasible && pd.months ? mkLabelFull(iso(addM(TODAY, pd.months)).slice(0,7)) : '—';
+        return `<tr>
+          <td><span class="order-n" style="width:20px;height:20px;font-size:10px">${i+1}</span></td>
+          <td><b>${esc(d.name)}</b></td>
+          <td class="num">${fmtM(Math.max(0,d.balance))}</td>
+          <td class="num">${(d.rate||0).toFixed(1)}%</td>
+          <td>${date}</td>
+          <td class="num">${fmtM(pd.interest, true)}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="6"><div class="empty">Nothing to project yet.</div></td></tr>'}</tbody>
+    </table></div>
+  </div>`;
+
+  el().innerHTML = head + strat + `<div class="split2">${chartCard}${orderCard}</div>` + strip + projCard;
+  drawPlanChart(method, altMethod, sim, alt, base);
+};
+function drawPlanChart(method, altMethod, sim, alt, base){
+  const n = Math.max(sim.series.length, alt.series.length, base.series.length);
+  const labels = Array.from({length:n},(_,i)=> i===0 ? 'now' : 'm+'+i);
+  const pad = (arr) => arr.concat(Array(Math.max(0, n - arr.length)).fill(NaN));
+  chartLines('plChart', labels, [
+    {name:'your plan · '+method,       color:'#C4643B', data:pad(sim.series),  area:true},
+    {name:altMethod+' (same budget)',  color:'#45789E', data:pad(alt.series),  dash:true},
+    {name:'minimums only',             color:'#C0575B', data:pad(base.series), dash:true}
+  ], {w:640, h:250, fs:9});
+}
+ACT['plan-method'] = el2 => {
+  db.settings.method = el2.dataset.t;
+  save(); RENDER.plan(); toast('Strategy set to '+el2.dataset.t);
+};
+INP['plan-budget'] = el2 => {
+  db.settings.monthlyBudget = Math.max(0, num(el2.value));
+  save(); RENDER.plan();
+};
+ACT['plan-use-leftover'] = () => {
+  const t = totals();
+  const inc = sum(db.budget.incomes.map(x=>x.amount));
+  const exp = sum(db.budget.expenses.map(x=>x.amount));
+  const left = Math.max(inc - exp, t.minTotal);
+  db.settings.monthlyBudget = Math.round(left*100)/100;
+  save(); RENDER.plan(); toast('Budget set to '+fmtM(db.settings.monthlyBudget));
+};
+ACT['plan-move'] = el2 => {
+  const id = el2.dataset.id, dir = Number(el2.dataset.dir);
+  const co = (db.settings.customOrder||[]).slice();
+  const active = orderedDebts('custom').map(d=>d.id);
+  /* rebuild full custom order = current visual order, then move */
+  const full = active.slice();
+  const i = full.indexOf(id);
+  if(i < 0) return;
+  const j = i + dir;
+  if(j < 0 || j >= full.length) return;
+  full.splice(j, 0, full.splice(i,1)[0]);
+  db.settings.customOrder = full;
+  db.settings.method = 'custom';
+  save(); RENDER.plan();
+};
+
+/* ============================================================
+   VIEW 4 · PAYMENTS — the heartbeat of the tracker
+   ============================================================ */
+RENDER.payments = function(){
+  const p = payTotals();
+  const last6 = paymentsByMonth(6).data;
+  const avg6 = last6.length ? sum(last6)/last6.filter(x=>x>0).length || 0 : 0;
+
+  let list = db.payments.slice().sort((a,b)=> a.date<b.date?1:-1);
+  if(payFilters.mk)   list = list.filter(x => x.date.slice(0,7) === payFilters.mk);
+  if(payFilters.debt) list = list.filter(x => x.debtId === payFilters.debt);
+  const shownTotal = sum(list.map(x=>x.amount));
+
+  const mkSet = new Set(db.payments.map(x=>x.date.slice(0,7)));
+  mkSet.add(mkOf(TODAY));
+  const mkOptions = Array.from(mkSet).sort().reverse();
+
+  const head = viewHead('Write it down',
+    'Pay<em>ments</em>',
+    `every entry lowers a balance and moves every chart on this page`,
+    `<button class="btn btn-primary" data-act="pay-new">${icon('plus')} Log payment</button>`);
+
+  const kpis = `<div class="kpis">
+    ${kpiCard('k-teal','check','This month', fmtM(p.thisMonth), mkLabelFull(mkOf(TODAY)))}
+    ${kpiCard('k-green','trend','Total paid', fmtM(p.allPaid), p.count+' payments logged')}
+    ${kpiCard('k-pink','coins','Interest paid', fmtM(p.interestPaid), 'the price already paid')}
+    ${kpiCard('k-blue','cal','Avg / active month', fmtM(avg6), 'last 6 months')}
+  </div>`;
+
+  const filters = `<div class="filterbar">
+    <div class="field" style="max-width:180px"><span>MONTH</span>
+      <select class="in" data-chg="pay-mk"><option value="">All months</option>
+        ${mkOptions.map(mk=>`<option value="${mk}" ${payFilters.mk===mk?'selected':''}>${mkLabelFull(mk)}</option>`).join('')}
+      </select></div>
+    <div class="field" style="max-width:200px"><span>DEBT</span>
+      <select class="in" data-chg="pay-debt"><option value="">All debts</option>
+        ${db.debts.map(d=>`<option value="${d.id}" ${payFilters.debt===d.id?'selected':''}>${esc(d.name)}</option>`).join('')}
+      </select></div>
+    ${payFilters.mk || payFilters.debt ? `<button class="btn btn-sm" data-act="pay-clear-filters">${icon('x')} Clear filters</button>` : ''}
+    <span class="sm mut" style="margin-left:auto;font-weight:700">${list.length} entr${list.length===1?'y':'ies'} · ${fmtM(shownTotal)}</span>
+  </div>`;
+
+  const chartCard = `<div class="panel" style="margin-bottom:18px">
+    <div class="panel-head"><div class="card-title">Payments by month</div>
+      <div class="card-sub">last 12 months</div></div>
+    <div id="payChart"></div>
+  </div>`;
+
+  const table = `<div class="panel pad0"><div style="padding:16px 16px 0" class="panel-head"><div class="card-title">Payment log</div></div>
+    <div style="overflow-x:auto;padding:0 8px 8px"><table class="tbl">
+      <thead><tr><th>Date</th><th>Debt</th><th class="num">To balance</th><th class="num">Interest</th><th class="num">Total out</th><th>Note</th><th></th></tr></thead>
+      <tbody>${list.length ? list.map(x => {
+        const d = debtById(x.debtId);
+        return `<tr>
+          <td>${fmtDate(x.date)}</td>
+          <td><span class="catdot" style="background:${d?d.color:'var(--faint)'}"></span>${esc(d?d.name:'deleted debt')}</td>
+          <td class="num amt-pos">−${fmtM(x.amount)}</td>
+          <td class="num mut">${x.interest ? fmtM(x.interest, true) : '—'}</td>
+          <td class="num"><b>${fmtM(x.amount + (x.interest||0))}</b></td>
+          <td class="mut">${esc(x.note||'')}</td>
+          <td class="ctr"><button class="icon-btn" data-act="pay-del" data-id="${x.id}" aria-label="Delete payment">${icon('trash')}</button></td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="7"><div class="empty">No payments here yet — log the first one and watch the balances move.</div></td></tr>'}</tbody>
+    </table></div></div>`;
+
+  el().innerHTML = head + kpis + filters + chartCard + table;
+  const pm = paymentsByMonth(12);
+  chartBars('payChart', pm.labels, [{name:'Payments', color:'#3E8E6E', data:pm.data}], {w:640, h:200, fs:9});
+};
+CHG['pay-mk']   = el2 => { payFilters.mk = el2.value; RENDER.payments(); };
+CHG['pay-debt'] = el2 => { payFilters.debt = el2.value; RENDER.payments(); };
+ACT['pay-clear-filters'] = () => { payFilters = {mk:'', debt:''}; RENDER.payments(); };
+ACT['pay-new'] = el2 => {
+  const act = activeDebts();
+  if(!act.length){ toast('No open debts — add one first'); return; }
+  const preset = el2 && el2.dataset ? el2.dataset.debt : '';
+  openModal(`<h3>Log a <em>payment</em></h3>
+  <div class="form-grid">
+    <div class="field"><span>DEBT</span><select class="in" id="m_debt">${debtOptions(preset || act[0].id, true)}</select></div>
+    <div class="field"><span>DATE</span><input class="in" id="m_date" type="date" value="${todayIso()}"></div>
+    <div class="field"><span>AMOUNT APPLIED TO BALANCE</span><input class="in" id="m_amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="field"><span>INTEREST CHARGED (OPTIONAL)</span><input class="in" id="m_int" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="field full"><span>NOTE (OPTIONAL)</span><input class="in" id="m_note" placeholder="e.g. tax refund, side gig"></div>
+  </div>
+  <div class="sm mut" style="margin-top:9px;line-height:1.6">The amount is subtracted from the debt balance immediately — the dashboard, plan and milestones all update instantly.</div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="pay-save">${icon('check')} Save payment</button>
+  </div>`);
+};
+ACT['pay-save'] = () => {
+  const debt = debtById($('m_debt').value);
+  const amount = num($('m_amount').value);
+  if(!debt){ toast('Pick a debt'); return; }
+  if(amount <= 0){ toast('Enter the amount'); return; }
+  const date = $('m_date').value || todayIso();
+  const applied = Math.min(amount, Math.max(debt.balance, 0));
+  const wasBal = debt.balance;
+  debt.balance = Math.max(0, debt.balance - applied);
+  if(debt.balance <= 0.004 && !debt.paidOff){
+    debt.paidOff = date;
+  }
+  db.payments.unshift({id:uid(), debtId:debt.id, date, amount:applied, interest:Math.max(0, num($('m_int').value)), note:$('m_note').value.trim()});
+  save(); closeModal(); renderView();
+  if(wasBal > 0.004 && debt.balance <= 0.004) toast(debt.name+' is PAID OFF — wonderful! ✿');
+  else toast('Payment logged — '+fmtM(applied)+' gone');
+};
+ACT['pay-del'] = el2 => {
+  const p = db.payments.find(x=>x.id===el2.dataset.id); if(!p) return;
+  const d = debtById(p.debtId);
+  confirmModal('Delete payment?',
+    `This entry (${fmtM(p.amount)}${d ? ' · '+esc(d.name) : ''}) will be removed and the amount added back to the debt balance.`,
+    'Delete', 'pay-del-yes', `data-id="${p.id}"`);
+};
+ACT['pay-del-yes'] = el2 => {
+  const p = db.payments.find(x=>x.id===el2.dataset.id); if(!p) return;
+  const d = debtById(p.debtId);
+  if(d){
+    d.balance += p.amount;
+    if(d.paidOff && d.balance > 0.004) d.paidOff = null;
+  }
+  db.payments = db.payments.filter(x=>x.id!==p.id);
+  save(); closeModal(); renderView(); toast('Payment removed — balance restored');
+};
+
+/* ============================================================
+   VIEW 5 · MONEY PLAN — how much can hit debt each month
+   ============================================================ */
+RENDER.budget = function(){
+  const inc = sum(db.budget.incomes.map(x=>x.amount));
+  const exp = sum(db.budget.expenses.map(x=>x.amount));
+  const left = inc - exp;
+  const t = totals();
+  const suggested = Math.max(left, t.minTotal);
+  const curBudget = num(db.settings.monthlyBudget);
+
+  const head = viewHead('Fund the mission',
+    'Money <em>Plan</em>',
+    'know exactly how much you can throw at debt every month',
+    `<button class="btn btn-primary" data-act="bud-new" data-kind="income">${icon('plus')} Income</button>
+     <button class="btn" data-act="bud-new" data-kind="expense">${icon('plus')} Expense</button>`);
+
+  const listBlock = (title, items, kind, colorCls) => `
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">${title}</div>
+        <button class="btn btn-sm" data-act="bud-new" data-kind="${kind}">${icon('plus')} Add</button></div>
+      ${items.length ? items.map(x => `
+        <div class="alloc-row">
+          <span class="catdot" style="background:${kind==='income'?'var(--sage)':'var(--oxb)'}"></span>
+          <span class="al-l">${esc(x.name)}</span>
+          <input class="in" style="width:110px;text-align:right;padding:5px 8px" type="number" min="0" step="0.01"
+            value="${x.amount}" data-inp="bud-amt" data-kind="${kind}" data-id="${x.id}">
+          <span class="al-v" style="width:82px;text-align:right">${fmtM(x.amount)}</span>
+          <button class="icon-btn" data-act="bud-del" data-kind="${kind}" data-id="${x.id}" aria-label="Delete">${icon('trash')}</button>
+        </div>`).join('')
+      : `<div class="empty">No ${kind} lines yet — add your ${kind==='income'?'paychecks':'regular costs'}.</div>`}
+    </div>`;
+
+  el().innerHTML = head + `
+  <div class="sim-strip">
+    <div class="sim-cell"><span>Monthly income</span><b class="ok">${fmtM(inc)}</b><small>${db.budget.incomes.length} source${db.budget.incomes.length===1?'':'s'}</small></div>
+    <div class="sim-cell"><span>Monthly expenses</span><b style="color:var(--oxb)">${fmtM(exp)}</b><small>${db.budget.expenses.length} line${db.budget.expenses.length===1?'':'s'}</small></div>
+    <div class="sim-cell"><span>Left for debt</span><b class="${left >= t.minTotal ? 'ok' : ''}" style="${left < t.minTotal ? 'color:var(--oxb)' : ''}">${fmtM(left)}</b><small>${left < t.minTotal ? 'below the '+fmtM(t.minTotal)+' minimums' : 'after all expenses'}</small></div>
+    <div class="sim-cell"><span>Current plan budget</span><b>${fmtM(curBudget)}</b><small>used by the Payoff Plan</small></div>
+  </div>
+  <div class="split2">
+    ${listBlock('Income', db.budget.incomes, 'income')}
+    ${listBlock('Expenses', db.budget.expenses, 'expense')}
+  </div>
+  <div class="panel" style="margin-top:18px">
+    <div class="panel-head"><div class="card-title">Send to the Payoff Plan</div>
+      <div class="card-sub">keeps both pages in sync</div></div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+      <div class="bignum">${fmtM(suggested)}</div>
+      <span class="sm mut" style="max-width:44ch;line-height:1.6">${left >= t.minTotal
+        ? 'This is your leftover after expenses — every dollar above the minimums melts months off the plan.'
+        : 'Your expenses exceed income, so the minimums ('+fmtM(t.minTotal)+') are the floor for now — trimming one expense moves this number.'}</span>
+      <button class="btn btn-primary" style="margin-left:auto" data-act="bud-apply">${icon('route')} Apply to Payoff Plan</button>
+    </div>
+  </div>`;
+};
+ACT['bud-new'] = el2 => {
+  const kind = el2.dataset.kind || 'expense';
+  openModal(`<h3>Add ${kind === 'income' ? '<em>income</em>' : '<em>expense</em>'}</h3>
+  <div class="form-grid">
+    <div class="field full"><span>NAME</span><input class="in" id="m_name" placeholder="${kind==='income'?'e.g. Salary — full time':'e.g. Rent & utilities'}"></div>
+    <div class="field"><span>AMOUNT / MONTH</span><input class="in" id="m_amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="bud-save" data-kind="${kind}">${icon('check')} Add</button>
+  </div>`);
+};
+ACT['bud-save'] = el2 => {
+  const name = $('m_name').value.trim();
+  const amount = num($('m_amount').value);
+  if(!name){ toast('Give it a name'); return; }
+  if(amount <= 0){ toast('Enter the monthly amount'); return; }
+  db.budget[el2.dataset.kind].push({id:uid(), name, amount});
+  save(); closeModal(); renderView(); toast('Added to the plan');
+};
+INP['bud-amt'] = el2 => {
+  const list = db.budget[el2.dataset.kind] || [];
+  const item = list.find(x=>x.id===el2.dataset.id);
+  if(!item) return;
+  item.amount = Math.max(0, num(el2.value));
+  save(); RENDER.budget();
+};
+ACT['bud-del'] = el2 => {
+  db.budget[el2.dataset.kind] = db.budget[el2.dataset.kind].filter(x=>x.id!==el2.dataset.id);
+  save(); renderView(); toast('Line removed');
+};
+ACT['bud-apply'] = () => {
+  const inc = sum(db.budget.incomes.map(x=>x.amount));
+  const exp = sum(db.budget.expenses.map(x=>x.amount));
+  const t = totals();
+  db.settings.monthlyBudget = Math.round(Math.max(inc - exp, t.minTotal)*100)/100;
+  save(); renderView(); toast('Payoff Plan budget set to '+fmtM(db.settings.monthlyBudget));
+};
+
+/* ============================================================
+   VIEW 6 · CALENDAR — due days & payments on one grid
+   ============================================================ */
+RENDER.calendar = function(){
+  const first = new Date(calY, calM, 1);
+  const dim = daysInMk(calY+'-'+pad2(calM+1));
+  const lead = (first.getDay()+6) % 7;   // Monday-first
+  const mk = calY+'-'+pad2(calM+1);
+  const paysByDay = {};
+  for(const p of db.payments.filter(p=>p.date.slice(0,7)===mk)){
+    const day = Number(p.date.slice(8,10));
+    (paysByDay[day] = paysByDay[day] || []).push(p);
+  }
+  const dues = duesInMk(mk);
+
+  let cells = '';
+  for(let i=0;i<lead;i++) cells += '<div class="cal-day out"></div>';
+  for(let d=1; d<=dim; d++){
+    const dIso = mk+'-'+pad2(d);
+    const isToday = dIso === todayIso(), isSel = dIso === calSel;
+    const dayDues = dues.filter(x => Number(x.date.slice(8,10)) === d);
+    const dayPays = paysByDay[d] || [];
+    let evs = '';
+    for(const x of dayDues) evs += `<span class="cev due only">due · ${esc(x.debt.name)}</span>`;
+    for(const p of dayPays.slice(0,2)) evs += `<span class="cev pay only">−${fmtM(p.amount)}</span>`;
+    if(dayPays.length > 2) evs += `<span class="cev more only">+${dayPays.length-2} more</span>`;
+    cells += `<button class="cal-day ${isToday?'today':''} ${isSel?'sel':''}" data-act="cal-sel" data-date="${dIso}">
+      <span class="dnum">${d}</span>${evs}</button>`;
+  }
+
+  const head = viewHead('See the month',
+    'Cal<em>endar</em>',
+    'red = due dates from your debts · green = payments logged',
+    `<div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-sm" data-act="cal-nav" data-t="-1" aria-label="Previous month">${icon('chevL')}</button>
+      <b style="font-size:14px;min-width:130px;text-align:center">${MONTHS[calM]} ${calY}</b>
+      <button class="btn btn-sm" data-act="cal-nav" data-t="1" aria-label="Next month">${icon('chevR')}</button>
+    </div>`);
+
+  const selDues = dues.filter(x => x.date === calSel);
+  const selPays = (paysByDay[Number(calSel.slice(8,10))] || []).filter(p=>p.date===calSel);
+
+  el().innerHTML = head + `
+  <div class="panel">
+    <div class="cal">
+      ${DOW_SHORT.map(d=>`<span class="hd">${d}</span>`).join('')}
+      ${cells}
+    </div>
+  </div>
+  <div class="split2 cal-detail">
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Day detail · ${fmtDateY(calSel)}</div>
+        ${calSel.slice(0,7) === mkOf(TODAY) ? '' : `<button class="btn btn-sm" data-act="pay-new">${icon('plus')} Log payment</button>`}</div>
+      ${selDues.length || selPays.length ? `
+        ${selDues.map(x=>`<div class="rowline">
+          <span class="pill red"><span class="pdot"></span>due</span>
+          <div class="rl-main"><div class="rl-t">${esc(x.debt.name)}</div>
+          <div class="rl-s">min ${fmtM(x.debt.minPay)} · APR ${(x.debt.rate||0).toFixed(1)}% · balance ${fmtM(Math.max(0,x.debt.balance))}</div></div>
+          <button class="btn btn-soft btn-sm" data-act="pay-new" data-debt="${x.debt.id}">Log it</button>
+        </div>`).join('')}
+        ${selPays.map(p=>{ const d = debtById(p.debtId);
+          return `<div class="rowline">
+          <span class="pill green"><span class="pdot"></span>paid</span>
+          <div class="rl-main"><div class="rl-t">${esc(d?d.name:'Deleted debt')}</div>
+          <div class="rl-s">${p.interest?'+'+fmtM(p.interest)+' interest · ':''}${esc(p.note||'logged payment')}</div></div>
+          <b class="amt-pos">−${fmtM(p.amount)}</b>
+        </div>`; }).join('')}`
+      : '<div class="empty">Nothing due and nothing logged on this day.</div>'}
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Month at a glance</div></div>
+      <div class="statline"><span>Due this month</span><b>${dues.length} payment${dues.length===1?'':'s'} · ${fmtM(sum(dues.map(x=>x.debt.minPay)))}</b></div>
+      <div class="statline"><span>Logged this month</span><b>${fmtM(sum(Object.values(paysByDay).flat().map(p=>p.amount)))} across ${Object.values(paysByDay).flat().length} payment${Object.values(paysByDay).flat().length===1?'':'s'}</b></div>
+      <div class="statline"><span>Open debts</span><b>${activeDebts().length}</b></div>
+      <div class="sm mut" style="margin-top:10px;line-height:1.6">Due chips appear automatically from each debt's due day. Click any day to see or log what happened.</div>
+    </div>
+  </div>`;
+};
+ACT['cal-nav'] = el2 => {
+  calM += Number(el2.dataset.t);
+  if(calM < 0){ calM = 11; calY--; }
+  if(calM > 11){ calM = 0; calY++; }
+  RENDER.calendar();
+};
+ACT['cal-sel'] = el2 => { calSel = el2.dataset.date; RENDER.calendar(); };
+
+/* ============================================================
+   VIEW 7 · MILESTONES — the celebration engine
+   ============================================================ */
+function milestonePaidDate(target){
+  /* first date the total paid (logged payments + any paydown recorded
+     before logging started) crossed target — always agrees with balances */
+  const t = totals();
+  if(t.startTotal <= 0 || t.paidTotal < target) return null;
+  const allPaid = payTotals().allPaid;
+  const init = Math.max(0, t.paidTotal - allPaid);
+  const sorted = db.payments.slice().sort((a,b)=> a.date<b.date?-1:1);
+  if(init >= target) return sorted.length ? sorted[0].date : todayIso();
+  let cum = 0;
+  for(const p of sorted){
+    cum += p.amount;
+    if(cum >= target - init) return p.date;
+  }
+  return sorted.length ? sorted[sorted.length-1].date : todayIso();
+}
+function computedMilestones(){
+  const t = totals();
+  const p = payTotals();
+  const out = [];
+  if(db.debts.length){
+    /* first payment */
+    const sorted = db.payments.slice().sort((a,b)=> a.date<b.date?-1:1);
+    out.push({key:'first', title:'First payment logged', sub:'The hardest check to write — and the one that started everything.',
+      icon:'flag', done: sorted.length > 0, date: sorted.length ? sorted[0].date : null});
+    /* amount milestones */
+    const thresholds = [500, 1000, 2500, 5000, 10000, 20000, 40000, 75000].filter(x => x < Math.max(t.startTotal*1.3, 2000));
+    for(const th of thresholds){
+      const dt = milestonePaidDate(th);
+      out.push({key:'amt'+th, title:fmtM(th)+' paid off', sub:'Total debt reduced by '+fmtM(th)+' since day one.',
+        icon:'trend', done: !!dt, date: dt, pct: clamp(t.paidTotal/th*100, 0, 100)});
+    }
+    /* percent milestones */
+    for(const pc of [10,25,50,75,90]){
+      const dt = milestonePaidDate(t.startTotal*pc/100);
+      out.push({key:'pct'+pc, title:pc+'% debt free', sub:fmtM(t.startTotal*pc/100)+' of the original weight lifted.',
+        icon:'target', done: !!dt, date: dt, pct: clamp(t.pctFree/pc*100, 0, 100)});
+    }
+    /* per-debt paid off */
+    for(const d of db.debts){
+      if(d.paidOff || d.balance <= 0.004){
+        out.push({key:'debt'+d.id, title:esc(d.name)+' — paid in full', sub:kindLabel(d.kind)+(d.creditor?' · '+d.creditor:''),
+          icon:'star', done:true, date:d.paidOff});
+      }
+    }
+    /* debt free */
+    out.push({key:'free', title:'DEBT FREE', sub:'Every balance at zero. This is the summit.',
+      icon:'trophy', done: t.balTotal <= 0.004, date: t.balTotal <= 0.004 ? todayIso() : null,
+      pct: t.pctFree});
+  }
+  /* custom milestones merge in */
+  for(const m of db.milestones){
+    out.push({key:'c'+m.id, title:m.title, sub:m.note||'', icon:'spark', done:!!m.done, date:m.done ? (m.date||null) : null, custom:m.id});
+  }
+  return out;
+}
+RENDER.milestones = function(){
+  const msList = computedMilestones();
+  const doneN = msList.filter(m=>m.done).length;
+  const head = viewHead('Count the wins',
+    'Mile<em>stones</em>',
+    `<b>${doneN}</b> of <b>${msList.length}</b> unlocked — each one earned, never given`,
+    `<button class="btn btn-primary" data-act="ms-new">${icon('plus')} Custom milestone</button>`);
+
+  const strip = `<div class="kpis">
+    ${kpiCard('k-teal','trophy','Unlocked', doneN+' / '+msList.length, 'keep the streak alive')}
+    ${kpiCard('k-peach','spark','Next up', esc((msList.find(m=>!m.done)||{title:'all done'}).title), 'within reach')}
+  </div>`;
+
+  const grid = msList.length ? `<div class="ms-grid">${msList.map(m => `
+    <div class="ms-card">
+      <span class="ms-ico ${m.done?'done':'locked'}">${icon(m.icon||'trophy')}</span>
+      <div class="ms-main">
+        <div class="ms-t ${m.done?'done':''}">${m.done && !m.custom ? esc(m.title) : esc(m.title)}</div>
+        ${m.sub ? `<div class="ms-s">${esc(m.sub)}</div>` : ''}
+        ${m.done
+          ? (m.date ? `<div class="ms-date">unlocked · ${fmtDate(m.date)}</div>` : '<div class="ms-date">unlocked ✓</div>')
+          : (m.pct != null ? `<div class="ms-body">${bar(m.pct, 100, 'warn')}<div class="sm mut" style="margin-top:4px">${Math.round(m.pct)}% of the way there</div></div>` : '')}
+        ${m.custom ? `<div style="margin-top:8px;display:flex;gap:7px">
+          ${m.done ? '' : `<button class="btn btn-sm btn-soft" data-act="ms-done" data-id="${m.custom}">${icon('check')} Mark achieved</button>`}
+          <button class="icon-btn" data-act="ms-del" data-id="${m.custom}" aria-label="Delete milestone">${icon('trash')}</button>
+        </div>` : ''}
+      </div>
+    </div>`).join('')}</div>`
+  : '<div class="panel"><div class="empty">Add your first debt and the milestones build themselves.</div></div>';
+
+  el().innerHTML = head + strip + grid;
+};
+ACT['ms-new'] = () => {
+  openModal(`<h3>Custom <em>milestone</em></h3>
+  <div class="form-grid">
+    <div class="field full"><span>TITLE</span><input class="in" id="m_name" placeholder="e.g. First card gone by summer"></div>
+    <div class="field full"><span>NOTE (OPTIONAL)</span><textarea class="in" id="m_note" placeholder="why this one matters to you"></textarea></div>
+    <div class="field"><span>DATE (WHEN ACHIEVED)</span><input class="in" id="m_date" type="date" value="${todayIso()}"></div>
+    <div class="field"><span style="display:flex;gap:8px;align-items:center">ALREADY ACHIEVED?
+      <label class="check"><input type="checkbox" id="m_done"><span class="box"></span></label></span></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="ms-save">${icon('check')} Save</button>
+  </div>`);
+};
+ACT['ms-save'] = () => {
+  const title = $('m_name').value.trim();
+  if(!title){ toast('Give the milestone a title'); return; }
+  const done = $('m_done').checked;
+  db.milestones.push({id:uid(), title, note:$('m_note').value.trim(), done, date: done ? ($('m_date').value||todayIso()) : ''});
+  save(); closeModal(); renderView(); toast('Milestone added');
+};
+ACT['ms-done'] = el2 => {
+  const m = db.milestones.find(x=>x.id===el2.dataset.id); if(!m) return;
+  m.done = true; m.date = m.date || todayIso();
+  save(); renderView(); toast('Milestone unlocked — well done! ✿');
+};
+ACT['ms-del'] = el2 => {
+  db.milestones = db.milestones.filter(m=>m.id!==el2.dataset.id);
+  save(); renderView(); toast('Milestone removed');
+};
+
+/* ============================================================
+   VIEW 8 · EMERGENCY FUND — the shield that stops new debt
+   ============================================================ */
+let fundColor = DEEPS[2];
+RENDER.efund = function(){
+  const efT = Math.max(1, num(db.settings.efTarget, 1000));
+  const efS = efundSaved();
+  const contribs = (db.efund.contribs||[]).slice().sort((a,b)=> a.date<b.date?1:-1);
+  const fTot = fundsTotal();
+
+  const head = viewHead('Build the shield',
+    'Emergency <em>Fund</em>',
+    'a small cushion today prevents fresh debt tomorrow',
+    `<button class="btn btn-primary" data-act="ef-add">${icon('plus')} Add to fund</button>
+     <button class="btn" data-act="fund-new">${icon('plus')} Sinking fund</button>`);
+
+  const starter = `<div class="split2" style="margin-bottom:18px">
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Starter fund</div>
+        <div class="card-sub">the classic first shield</div></div>
+      <div class="bignum">${fmtM(efS)} <em>/ ${fmtM(efT)}</em></div>
+      <div style="margin-top:10px">${bar(efS, efT, efS >= efT ? 'ok' : 'warn')}</div>
+      <div class="sm mut" style="margin-top:6px">${efS >= efT
+        ? 'Fully funded — from here, every spare dollar can hit debt with confidence.'
+        : Math.round(efS/efT*100)+'% there — even '+fmtM(Math.max(0,efT-efS))+' more makes surprises survivable.'}</div>
+      <div class="field" style="margin-top:12px;max-width:190px"><span>TARGET AMOUNT</span>
+        <input class="in" type="number" min="0" step="50" value="${efT}" data-inp="ef-target"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Fund history</div>
+        <div class="card-sub">${contribs.length} contribution${contribs.length===1?'':'s'}</div></div>
+      ${contribs.length ? contribs.map(c=>`
+        <div class="rowline">
+          <div class="rl-main"><div class="rl-t">${fmtM(c.amount)}</div><div class="rl-s">${fmtDate(c.date)}</div></div>
+          <button class="icon-btn" data-act="ef-del" data-id="${c.id}" aria-label="Delete contribution">${icon('trash')}</button>
+        </div>`).join('')
+      : '<div class="empty">No contributions yet — small and steady wins here.</div>'}
+      <div class="statline" style="margin-top:6px"><span>Total shield</span><b>${fmtM(efS + fTot)}</b> incl. sinking funds</div>
+    </div>
+  </div>`;
+
+  const fundsGrid = db.funds.length ? `<div class="debt-grid">${db.funds.map(f=>`
+    <div class="debt-card" style="--dc:${f.color||'var(--navy-soft)'}">
+      <div class="dc-top">
+        <div><div class="dc-name">${esc(f.name)}</div>
+        <div class="dc-cred">sinking fund</div></div>
+        <span class="pill blue"><span class="pdot"></span>${f.target > 0 ? Math.round(clamp(f.saved/f.target*100,0,100))+'%' : '—'}</span>
+      </div>
+      <div class="dc-bal">${fmtM(f.saved)} <small>of ${fmtM(f.target)}</small></div>
+      <div style="margin-top:9px">${bar(f.saved, f.target, f.saved >= f.target ? 'ok' : '')}</div>
+      <div class="sm mut" style="margin-top:5px">${f.saved >= f.target ? 'Funded — nicely done.' : fmtM(Math.max(0,f.target-f.saved))+' to go'}</div>
+      <div class="dc-actions">
+        <button class="btn btn-soft btn-sm" data-act="fund-add" data-id="${f.id}">${icon('plus')} Contribute</button>
+        <button class="icon-btn" data-act="fund-del" data-id="${f.id}" aria-label="Delete fund">${icon('trash')}</button>
+      </div>
+    </div>`).join('')}</div>`
+  : `<div class="panel"><div class="empty">Sinking funds turn "unexpected" bills into planned line items — add one for car repairs, gifts or insurance.</div></div>`;
+
+  const chart = db.funds.length ? `<div class="panel" style="margin-top:18px">
+    <div class="panel-head"><div class="card-title">Sinking funds</div>
+      <div class="card-sub">saved vs target</div></div>
+    <div id="efChart"></div>
+  </div>` : '';
+
+  el().innerHTML = head + starter + `<div class="chip-label">sinking funds</div>` + fundsGrid + chart;
+  if(db.funds.length){
+    chartBars('efChart', db.funds.map(f=>f.name), [
+      {name:'Saved',  color:'#3E8E6E', data:db.funds.map(f=>f.saved)},
+      {name:'Target', color:'#F0DDB4', data:db.funds.map(f=>f.target)}
+    ], {w:640, h:190, fs:9});
+  }
+};
+ACT['ef-add'] = () => fundContribModal(null, 'ef-save');
+ACT['ef-del'] = el2 => {
+  db.efund.contribs = db.efund.contribs.filter(c=>c.id!==el2.dataset.id);
+  save(); renderView(); toast('Contribution removed');
+};
+INP['ef-target'] = el2 => {
+  db.settings.efTarget = Math.max(0, num(el2.value, 1000));
+  save(); RENDER.efund();
+};
+ACT['fund-new'] = () => {
+  fundColor = DEEPS[(db.funds.length + 2) % DEEPS.length];
+  openModal(`<h3>New sinking <em>fund</em></h3>
+  <div class="form-grid">
+    <div class="field"><span>NAME</span><input class="in" id="m_name" placeholder="e.g. Car maintenance"></div>
+    <div class="field"><span>TARGET</span><input class="in" id="m_target" type="number" min="0" step="10" placeholder="0"></div>
+    <div class="field full"><span>COLOR</span>
+      <div style="display:flex;gap:9px;padding-top:6px;flex-wrap:wrap">
+        ${PASTELS.map((c,i)=>`<button class="theme-dot ${fundColor===DEEPS[i]?'active':''}" data-act="fund-color" data-c="${DEEPS[i]}" style="background:${c}" aria-label="color"></button>`).join('')}
+      </div></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="fund-save">${icon('check')} Create</button>
+  </div>`);
+};
+ACT['fund-color'] = el2 => {
+  fundColor = el2.dataset.c;
+  $$('#modalBody .theme-dot').forEach(x=>x.classList.toggle('active', x.dataset.c===fundColor));
+};
+ACT['fund-save'] = () => {
+  const name = $('m_name').value.trim();
+  const target = num($('m_target').value);
+  if(!name){ toast('Name the fund'); return; }
+  if(target <= 0){ toast('Set a target'); return; }
+  db.funds.push({id:uid(), name, target, saved:0, color:fundColor});
+  save(); closeModal(); renderView(); toast('Sinking fund created');
+};
+ACT['fund-add'] = el2 => fundContribModal(el2.dataset.id, 'fundc-save');
+function fundContribModal(id, actName){
+  const f = id ? db.funds.find(x=>x.id===id) : null;
+  openModal(`<h3>${f ? 'Contribute · <em>'+esc(f.name)+'</em>' : 'Add to <em>starter fund</em>'}</h3>
+  <div class="form-grid">
+    <div class="field"><span>AMOUNT</span><input class="in" id="m_amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="field"><span>DATE</span><input class="in" id="m_date" type="date" value="${todayIso()}"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="${actName}" ${f?`data-id="${f.id}"`:''}>${icon('check')} Add</button>
+  </div>`);
+}
+ACT['ef-save'] = el2 => {
+  const amount = num($('m_amount').value);
+  if(amount <= 0){ toast('Enter the amount'); return; }
+  db.efund.contribs.push({id:uid(), date:$('m_date').value||todayIso(), amount});
+  save(); closeModal(); renderView();
+  if(efundSaved() >= Math.max(1, num(db.settings.efTarget,1000))) toast('Starter fund complete — beautiful work! ✿');
+  else toast('Added to the fund');
+};
+ACT['fundc-save'] = el2 => {
+  const f = db.funds.find(x=>x.id===el2.dataset.id); if(!f) return;
+  const amount = num($('m_amount').value);
+  if(amount <= 0){ toast('Enter the amount'); return; }
+  f.saved += amount;
+  save(); closeModal(); renderView();
+  if(f.saved >= f.target) toast(f.name+' fully funded — nicely done! ✿');
+  else toast('Added to '+f.name);
+};
+ACT['fund-del'] = el2 => {
+  const f = db.funds.find(x=>x.id===el2.dataset.id); if(!f) return;
+  confirmModal('Delete fund?', `<b>${esc(f.name)}</b> and its saved progress will be removed.`, 'Delete', 'fund-del-yes', `data-id="${f.id}"`);
+};
+ACT['fund-del-yes'] = el2 => {
+  db.funds = db.funds.filter(f=>f.id!==el2.dataset.id);
+  save(); closeModal(); renderView(); toast('Fund removed');
+};
+
+/* ============================================================
+   VIEW 9 · PROGRESS — the long view of the journey
+   ============================================================ */
+RENDER.progress = function(){
+  const t = totals(), p = payTotals();
+  const sorted = db.payments.slice().sort((a,b)=> a.date<b.date?-1:1);
+  const firstDate = sorted.length ? sorted[0].date : null;
+  const monthsIn = firstDate ? Math.max(1, Math.round((TODAY - fromIso(firstDate))/86400000/30.44)) : 0;
+  const biggest = sorted.reduce((m,x)=> Math.max(m, x.amount), 0);
+  const trend = balanceTrend(12);
+  const pm = paymentsByMonth(12);
+  const sim = payoffSim(db.settings.method || 'snowball', db.settings.monthlyBudget);
+
+  /* cumulative paid series */
+  let cum = 0;
+  const cumByMk = {};
+  for(const p2 of sorted){ cum += p2.amount; cumByMk[p2.date.slice(0,7)] = cum; }
+  const mks = lastMks(12);
+  let carry = cumByMk[mks[0]] != null ? 0 : 0;
+  const beforeStart = sum(db.payments.filter(x=>x.date.slice(0,7) < mks[0]).map(x=>x.amount));
+  let run = beforeStart;
+  const cumSeries = mks.map(mk => { run = cumByMk[mk] != null ? cumByMk[mk] : run; return run; });
+
+  const head = viewHead('The long view',
+    'Prog<em>ress</em>',
+    `every line drawn from your ${p.count} logged payment${p.count===1?'':'s'}`,
+    '');
+
+  const kpis = `<div class="kpis">
+    ${kpiCard('k-teal','trend','Total paid', fmtM(p.allPaid), 'since day one')}
+    ${kpiCard('k-blue','target','% debt free', Math.round(t.pctFree)+'%', fmtM(t.startTotal)+' started')}
+    ${kpiCard('k-peach','cal','Months in', monthsIn ? String(monthsIn) : '—', firstDate ? 'since '+fmtDate(firstDate) : 'log a payment')}
+    ${kpiCard('k-green','spark','Biggest payment', fmtM(biggest), 'avg '+fmtM(p.count ? p.allPaid/p.count : 0))}
+  </div>`;
+
+  const charts = `<div class="grid2">
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Total balance trend</div><div class="card-sub">12 months</div></div>
+      <div id="pgTrend"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Cumulative paid</div><div class="card-sub">money gone from debt</div></div>
+      <div id="pgCum"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Balance vs interest by month</div><div class="card-sub">where payments went</div></div>
+      <div id="pgStack"></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="card-title">Composition now</div><div class="card-sub">who holds what</div></div>
+      <div id="pgDonut"></div>
+    </div>
+  </div>`;
+
+  const table = `<div class="panel" style="margin-top:18px">
+    <div class="panel-head"><div class="card-title">Debt-by-debt scoreboard</div>
+      <div class="card-sub">payoff dates follow your ${db.settings.method||'snowball'} plan</div></div>
+    <div style="overflow-x:auto"><table class="tbl">
+      <thead><tr><th>Debt</th><th class="num">Original</th><th class="num">Balance</th><th class="num">Paid</th><th class="num">% done</th><th class="num">Interest paid</th><th>Projected payoff</th></tr></thead>
+      <tbody>${db.debts.length ? db.debts.map(d=>{
+        const paid = d.start - Math.max(0,d.balance);
+        const ip = sum(db.payments.filter(x=>x.debtId===d.id).map(x=>x.interest||0));
+        const pd = sim.perDebt[d.id];
+        const dt = d.paidOff || d.balance <= 0.004 ? (d.paidOff ? fmtDateY(d.paidOff) : 'paid ✓')
+          : (sim.feasible && pd && pd.months ? mkLabelFull(iso(addM(TODAY, pd.months)).slice(0,7)) : '—');
+        return `<tr>
+          <td><span class="catdot" style="background:${d.color}"></span><b>${esc(d.name)}</b></td>
+          <td class="num">${fmtM(d.start)}</td>
+          <td class="num">${fmtM(Math.max(0,d.balance))}</td>
+          <td class="num amt-pos">${fmtM(paid)}</td>
+          <td class="num">${d.start>0 ? Math.round(clamp(paid/d.start*100,0,100))+'%' : '—'}</td>
+          <td class="num mut">${ip ? fmtM(ip,true) : '—'}</td>
+          <td>${dt}</td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="7"><div class="empty">Add debts to fill the scoreboard.</div></td></tr>'}</tbody>
+    </table></div>
+  </div>`;
+
+  el().innerHTML = head + kpis + charts + table;
+  chartLines('pgTrend', trend.labels, [{name:'Balance', color:'#C0575B', data:trend.series, area:true}], {w:460, h:220, fs:9});
+  chartLines('pgCum', mks.map(mkShort), [{name:'Cumulative paid', color:'#3E8E6E', data:cumSeries, area:true}], {w:460, h:220, fs:9});
+  chartStackedLocal('pgStack', pm.labels, pm.data, mks.map(mk => sum(db.payments.filter(x=>x.date.slice(0,7)===mk).map(x=>x.interest||0))));
+  chartDonut('pgDonut', activeDebts().map(d=>({label:d.name, value:d.balance, color:d.color})), `<b>${fshort(t.balTotal)}</b><small>left</small>`);
+};
+function chartStackedLocal(host, labels, payData, intData){
+  chartBars(host, labels, [
+    {name:'To balance',  color:'#3E8E6E', data:payData},
+    {name:'Interest',    color:'#C0575B', data:intData}
+  ], {w:460, h:220, fs:9});
+}
+
+/* ============================================================
+   VIEW 10 · INTEREST INSIGHTS — what debt really costs
+   ============================================================ */
+RENDER.interest = function(){
+  const t = totals();
+  const budget = Math.max(0, num(db.settings.monthlyBudget));
+  const base = payoffSim(db.settings.method || 'snowball', budget);
+  const scenarioExtras = [25, 50, 100, 250];
+  const scenarios = [{extra:0}].concat(scenarioExtras.map(e=>({extra:e}))).map(s => {
+    const sim = payoffSim(db.settings.method || 'snowball', budget + s.extra);
+    return {extra:s.extra, months:sim.months, interest:sim.interest, feasible:sim.feasible,
+      savedInt: base.feasible ? Math.max(0, base.interest - sim.interest) : 0,
+      savedMo:  base.feasible ? Math.max(0, base.months - sim.months) : 0};
+  });
+
+  const ranked = activeDebts().slice().sort((a,b)=> (b.rate||0)-(a.rate||0));
+
+  const head = viewHead('Know the true cost',
+    'Interest <em>Insights</em>',
+    `you are paying <b>${fmtM(t.moInterest, true)}</b> in interest every single month`,
+    '');
+
+  const strip = `<div class="sim-strip">
+    <div class="sim-cell"><span>Interest / month</span><b style="color:var(--oxb)">${fmtM(t.moInterest, true)}</b><small>accrues while balances last</small></div>
+    <div class="sim-cell"><span>Interest / year</span><b style="color:var(--oxb)">${fmtM(t.moInterest*12)}</b><small>at today's balances</small></div>
+    <div class="sim-cell"><span>Average APR</span><b>${t.avgApr ? t.avgApr.toFixed(1)+'%' : '—'}</b><small>weighted by balance</small></div>
+    <div class="sim-cell"><span>Plan interest</span><b>${base.feasible ? fmtM(base.interest) : '—'}</b><small>total until freedom</small></div>
+  </div>`;
+
+  const rankCard = `<div class="panel">
+    <div class="panel-head"><div class="card-title">APR ranking</div>
+      <div class="card-sub">highest cost first</div></div>
+    ${ranked.length ? ranked.map(d=>`
+      <div class="mini-bar" style="padding:7px 0">
+        <span class="mb-l" style="width:110px">${esc(d.name)}</span>
+        <div class="bar"><i style="width:${t.avgApr ? clamp((d.rate||0)/Math.max(...ranked.map(x=>x.rate||0))*100,4,100) : 0}%;background:var(--oxb)"></i></div>
+        <span class="mb-v">${(d.rate||0).toFixed(1)}% · ${fmtM(Math.max(0,d.balance)*(d.rate||0)/1200, true)}/mo</span>
+      </div>`).join('')
+    : '<div class="empty">No open debts — nothing is costing you interest. Lovely.</div>'}
+    <div class="sm mut" style="margin-top:8px;line-height:1.6">A card at 25% APR doubles its balance in roughly three years if untouched — this page shows exactly where the fire burns hottest.</div>
+  </div>`;
+
+  const simCard = `<div class="panel">
+    <div class="panel-head"><div class="card-title">Extra payment impact</div>
+      <div class="card-sub">vs your current ${fmtM(budget)}/mo plan</div></div>
+    <div style="overflow-x:auto"><table class="tbl">
+      <thead><tr><th>Plan</th><th class="num">Debt-free</th><th class="num">Total interest</th><th class="num">Interest saved</th><th class="num">Time saved</th></tr></thead>
+      <tbody>${scenarios.map(s=>`
+        <tr>
+          <td><b>${fmtM(budget + s.extra)}/mo</b>${s.extra ? ` <span class="pill green">+${fmtM(s.extra)}</span>` : ' <span class="pill gray">current</span>'}</td>
+          <td class="num">${s.feasible ? mkLabel(base.freeDate ? iso(addM(TODAY, s.months)).slice(0,7) : '').replace('&nbsp;',' ') : '—'}</td>
+          <td class="num">${s.feasible ? fmtM(s.interest) : '—'}</td>
+          <td class="num amt-pos">${s.savedInt ? fmtM(s.savedInt) : '—'}</td>
+          <td class="num">${s.savedMo ? s.savedMo+' mo' : '—'}</td>
+        </tr>`).join('')}</tbody>
+    </table></div>
+    <div style="margin-top:12px" id="inChart"></div>
+    <div class="sm mut" style="margin-top:6px;line-height:1.6">Small extras compound: the difference between paying the minimums and paying a little more is usually thousands in avoided interest.</div>
+  </div>`;
+
+  el().innerHTML = head + strip + `<div class="split2">${simCard}${rankCard}</div>`;
+  chartBars('inChart', scenarios.map(s => '+'+fshort(s.extra)),
+    [{name:'Total interest', color:'#C0575B', data:scenarios.map(s=>s.feasible ? s.interest : 0)}], {w:520, h:190, fs:9});
+};
+
+/* ============================================================
+   VIEW 11 · CREDIT SCORE — watch the number climb
+   ============================================================ */
+RENDER.score = function(){
+  const list = db.scores.slice().sort((a,b)=> a.date<b.date?-1:1);
+  const latest = list.length ? list[list.length-1] : null;
+  const first = list.length ? list[0] : null;
+  const change = latest && first ? latest.score - first.score : 0;
+  const ring = latest ? clamp((latest.score - SCORE_MIN)/(SCORE_MAX-SCORE_MIN)*100, 2, 100) : 0;
+  const band = scoreBand(latest ? latest.score : 0);
+
+  const head = viewHead('Rebuild the number',
+    'Credit <em>Score</em>',
+    'lower balances mean a healthier score — track the climb here',
+    `<button class="btn btn-primary" data-act="score-new">${icon('plus')} Add check-in</button>`);
+
+  const hero = `<div class="panel" style="margin-bottom:18px"><div class="score-hero">
+    <div class="score-ring">
+      <svg width="118" height="118" viewBox="0 0 118 118">
+        <circle cx="59" cy="59" r="50" fill="none" stroke="var(--track)" stroke-width="11"/>
+        <circle cx="59" cy="59" r="50" fill="none" stroke="${band.color}" stroke-width="11" stroke-linecap="round"
+          stroke-dasharray="${(ring*3.14159).toFixed(1)} 999"/>
+      </svg>
+      <div class="sr-val"><b>${latest ? latest.score : '—'}</b><small>latest</small></div>
+    </div>
+    <div style="flex:1;min-width:220px">
+      <span class="score-band" style="background:${band.bg};color:${band.color}">${latest ? band.label : 'no data yet'}</span>
+      <div class="bignum" style="margin-top:8px">${change ? (change > 0 ? '+' : '') + change : '—'} <em>points since first check-in</em></div>
+      <div class="sm mut" style="margin-top:4px;line-height:1.6">${latest
+        ? `Last checked ${fmtDateY(latest.date)} · ${esc(latest.bureau || '—')}${latest.note ? ' · '+esc(latest.note) : ''}`
+        : 'Log your first check-in and the chart starts drawing itself.'}</div>
+      <div class="sm mut" style="margin-top:6px">${list.length} check-in${list.length===1?'':'s'} recorded</div>
+    </div>
+  </div></div>`;
+
+  const chart = list.length ? `<div class="panel" style="margin-bottom:18px">
+    <div class="panel-head"><div class="card-title">Score history</div><div class="card-sub">${list.length} entries</div></div>
+    <div id="scChart"></div>
+  </div>` : '';
+
+  const table = `<div class="panel pad0"><div style="padding:16px 16px 0" class="panel-head"><div class="card-title">Check-in log</div></div>
+    <div style="overflow-x:auto;padding:0 8px 8px"><table class="tbl">
+      <thead><tr><th>Date</th><th class="num">Score</th><th>Change</th><th>Bureau</th><th>Note</th><th></th></tr></thead>
+      <tbody>${list.length ? list.map((x,i)=>{
+        const prev = i > 0 ? list[i-1].score : null;
+        const diff = prev != null ? x.score - prev : null;
+        return `<tr>
+          <td>${fmtDateY(x.date)}</td>
+          <td class="num"><b>${x.score}</b></td>
+          <td class="num">${diff == null ? '—' : `<span class="${diff >= 0 ? 'amt-pos' : 'amt-neg'}">${diff >= 0 ? '+' : ''}${diff}</span>`}</td>
+          <td>${esc(x.bureau||'—')}</td>
+          <td class="mut">${esc(x.note||'')}</td>
+          <td class="ctr"><button class="icon-btn" data-act="score-del" data-id="${x.id}" aria-label="Delete entry">${icon('trash')}</button></td>
+        </tr>`;
+      }).join('') : '<tr><td colspan="6"><div class="empty">No check-ins yet.</div></td></tr>'}</tbody>
+    </table></div></div>`;
+
+  el().innerHTML = head + hero + chart + table;
+  if(list.length){
+    chartLines('scChart', list.map(x=>fmtDate(x.date)),
+      [{name:'Score', color:'#45789E', data:list.map(x=>x.score), area:true}], {w:640, h:210, fs:9});
+  }
+};
+function scoreBand(s){
+  if(!s) return {label:'', color:'var(--faint)', bg:'var(--soft)'};
+  if(s >= 800) return {label:'Exceptional', color:'#2E7D5B', bg:'#DFF2E9'};
+  if(s >= 740) return {label:'Very good',  color:'#45789E', bg:'#E3F0FA'};
+  if(s >= 670) return {label:'Good',       color:'#3E8E6E', bg:'#DFF2EF'};
+  if(s >= 580) return {label:'Fair',       color:'#9A6A22', bg:'#FBF1DC'};
+  return {label:'Building', color:'#C0575B', bg:'#F9E7E7'};
+}
+ACT['score-new'] = () => {
+  openModal(`<h3>Credit score <em>check-in</em></h3>
+  <div class="form-grid">
+    <div class="field"><span>DATE</span><input class="in" id="m_date" type="date" value="${todayIso()}"></div>
+    <div class="field"><span>SCORE (${SCORE_MIN}–${SCORE_MAX})</span><input class="in" id="m_score" type="number" min="${SCORE_MIN}" max="${SCORE_MAX}" placeholder="e.g. 640"></div>
+    <div class="field"><span>BUREAU</span><select class="in" id="m_bureau">${BUREAUS.map(b=>`<option>${b}</option>`).join('')}</select></div>
+    <div class="field"><span>NOTE (OPTIONAL)</span><input class="in" id="m_note" placeholder="e.g. card below 30%"></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="score-save">${icon('check')} Save</button>
+  </div>`);
+};
+ACT['score-save'] = () => {
+  const score = Math.round(num($('m_score').value));
+  if(score < SCORE_MIN || score > SCORE_MAX){ toast('Score must be between '+SCORE_MIN+' and '+SCORE_MAX); return; }
+  db.scores.push({id:uid(), date:$('m_date').value||todayIso(), score, bureau:$('m_bureau').value, note:$('m_note').value.trim()});
+  save(); closeModal(); renderView(); toast('Check-in saved — keep watching it climb');
+};
+ACT['score-del'] = el2 => {
+  db.scores = db.scores.filter(x=>x.id!==el2.dataset.id);
+  save(); renderView(); toast('Entry removed');
+};
+
+/* ============================================================
+   VIEW 12 · MOTIVATION — the why behind every payment
+   ============================================================ */
+const AFFIRMATIONS = [
+  'Every payment is a vote for the life I want.',
+  'Debt is temporary — the habits I build now are forever.',
+  'I can do hard things, one month at a time.',
+  'Progress beats perfection. Paid is peaceful.'
+];
+RENDER.motivation = function(){
+  const wins = db.wins.slice().sort((a,b)=> a.date<b.date?1:-1);
+  const mine = Array.isArray(db.affirmations) ? db.affirmations : [];
+  const t = totals();
+
+  const head = viewHead('Feed the fire',
+    'Moti<em>vation</em>',
+    'the why behind every payment — read it on the hard days',
+    `<button class="btn btn-primary" data-act="win-new">${icon('plus')} Add a win</button>`);
+
+  const why = `<div class="panel" style="margin-bottom:18px">
+    <div class="panel-head"><div class="card-title">Why I am doing this</div>
+      <div class="card-sub">autosaves as you type</div></div>
+    <textarea class="in why-box" data-inp="why-edit" placeholder="Picture the day the last payment clears… what does that morning feel like? Write it here.">${esc(db.why||'')}</textarea>
+  </div>`;
+
+  const affirm = `<div class="panel">
+    <div class="panel-head"><div class="card-title">Affirmations</div>
+      <div class="card-sub">say them out loud — seriously</div></div>
+    <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px">
+      ${AFFIRMATIONS.map(a=>`<span class="sticker">${icon('sun')}${esc(a)}</span>`).join('')}
+    </div>
+    ${mine.length ? `<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px">
+      ${mine.map(a=>`<span class="sticker" style="transform:rotate(1.2deg)">${esc(a)}
+        <button class="icon-btn" data-act="aff-del" data-id="${a.id}" aria-label="Remove">${icon('x')}</button></span>`).join('')}
+    </div>` : ''}
+    <div style="display:flex;gap:8px">
+      <input class="in" id="affInput" placeholder="write your own…" data-inp="aff-inp">
+      <button class="btn btn-soft" data-act="aff-add">${icon('plus')} Add</button>
+    </div>
+  </div>`;
+
+  const winsPanel = `<div class="panel">
+    <div class="panel-head"><div class="card-title">Wins journal</div>
+      <div class="card-sub">${wins.length} moment${wins.length===1?'':'s'} worth remembering</div></div>
+    ${wins.length ? wins.map(w=>`
+      <div class="win-item">
+        <div style="display:flex;justify-content:space-between;gap:8px;align-items:baseline">
+          <div class="win-t">${esc(w.title)}</div>
+          <button class="icon-btn" data-act="win-del" data-id="${w.id}" aria-label="Delete win">${icon('trash')}</button>
+        </div>
+        <div class="win-d">${fmtDate(w.date)}</div>
+        ${w.note ? `<div class="win-n">${esc(w.note)}</div>` : ''}
+      </div>`).join('')
+    : '<div class="empty">Wins grow quietly — capture them here so future-you can see how far you came.</div>'}
+    <div class="sm mut" style="margin-top:10px;line-height:1.6">${t.paidTotal > 0
+      ? 'So far you have paid down <b>'+fmtM(t.paidTotal)+'</b>. That number is proof, not luck.'
+      : 'Your first win is one payment away.'}</div>
+  </div>`;
+
+  el().innerHTML = head + why + `<div class="split2">${winsPanel}${affirm}</div>`;
+};
+INP['why-edit'] = el2 => { db.why = el2.value; save(); };
+let affDraft = '';
+INP['aff-inp'] = el2 => { affDraft = el2.value; };
+ACT['aff-add'] = () => {
+  const v = affDraft.trim();
+  if(!v){ toast('Write the affirmation first'); return; }
+  if(!Array.isArray(db.affirmations)) db.affirmations = [];
+  db.affirmations.push({id:uid(), text:v});
+  affDraft = '';
+  const inp = $('affInput'); if(inp) inp.value = '';
+  save(); renderView(); toast('Added to your wall');
+};
+ACT['aff-del'] = el2 => {
+  db.affirmations = (db.affirmations||[]).filter(a=>a.id!==el2.dataset.id);
+  save(); renderView(); toast('Removed');
+};
+ACT['win-new'] = () => {
+  openModal(`<h3>Log a <em>win</em></h3>
+  <div class="form-grid">
+    <div class="field"><span>DATE</span><input class="in" id="m_date" type="date" value="${todayIso()}"></div>
+    <div class="field"><span>TITLE</span><input class="in" id="m_name" placeholder="e.g. Cut the food delivery habit"></div>
+    <div class="field full"><span>THE STORY (OPTIONAL)</span><textarea class="in" id="m_note" placeholder="what happened, how it felt"></textarea></div>
+  </div>
+  <div class="modal-actions">
+    <button class="btn" data-act="modal-close">Cancel</button>
+    <button class="btn btn-primary" data-act="win-save">${icon('check')} Save win</button>
+  </div>`);
+};
+ACT['win-save'] = () => {
+  const title = $('m_name').value.trim();
+  if(!title){ toast('Name the win'); return; }
+  db.wins.push({id:uid(), date:$('m_date').value||todayIso(), title, note:$('m_note').value.trim()});
+  save(); closeModal(); renderView(); toast('Win logged — future-you says thanks');
+};
+ACT['win-del'] = el2 => {
+  db.wins = db.wins.filter(w=>w.id!==el2.dataset.id);
+  save(); renderView(); toast('Win removed');
+};
+
+/* ============================================================
+   VIEW 13 · SETTINGS — personalize · backup · credits
+   ============================================================ */
+RENDER.settings = function(){
+  const s = db.settings;
+  const bytes = (()=>{ try{ return (localStorage.getItem(LS_KEY)||'').length; }catch(e){ return 0; } })();
+  el().innerHTML = viewHead('Make it yours',
+    'Set<em>tings</em>',
+    'everything is stored only in this browser — private by design',
+    '')
+  + `<div class="set-grid">
+      <div class="panel">
+        <div class="panel-head"><div class="card-title">Personalize</div>
+          <div class="card-sub">original &amp; copyright-safe</div></div>
+        <div class="field" style="margin-bottom:10px"><span>YOUR NAME (FOR GREETINGS)</span>
+          <input class="in" placeholder="e.g. Alex" value="${esc(s.name)}" data-chg="set-name"></div>
+        <div class="field" style="margin-bottom:10px"><span>CURRENCY SYMBOL</span>
+          <select class="in" data-chg="set-cur">${CUR_OPTIONS.map(o=>{
+            const sym = o.split(' — ')[0];
+            return `<option value="${sym}" ${s.cur===sym?'selected':''}>${o}</option>`;
+          }).join('')}</select></div>
+        <div class="field"><span>ACCENT MOOD</span>
+          <div style="display:flex;gap:9px;padding-top:6px;flex-wrap:wrap">
+            ${MOODS.map(m=>`<button class="theme-dot ${s.mood===m.id?'active':''}" data-theme-set="${m.id}" style="background:${m.c}" title="${m.t}" aria-label="${m.t}"></button>`).join('')}
+          </div></div>
+        <div class="sm mut" style="margin-top:10px;line-height:1.6">All palettes, wording, icons and the sunrise illustration in this app are original creations made for LaCasaPrint planners — nothing here borrows third-party designs, so your tracker stays safely yours.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="card-title">Backup &amp; restore</div>
+          <div class="card-sub">JSON file · stays on your device</div></div>
+        <p class="sm mut" style="line-height:1.65;margin-bottom:10px">Export everything — debts, payments, plan, budget, funds, scores and wins — into one file you can keep safe or move to another browser. Importing replaces the current data.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-primary" data-act="export-data">${icon('download')} Export data</button>
+          <label class="btn" style="cursor:pointer">${icon('upload')} Import data
+            <input type="file" accept=".json,application/json" style="display:none" data-chg="import-data"></label>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="card-title">Demo data</div></div>
+        <p class="sm mut" style="line-height:1.65;margin-bottom:10px">Curious what a lived-in tracker looks like? Load a realistic sample: five debts, seven months of payments, a money plan, emergency fund, sinking funds, credit-score history and wins. Explore freely and clear it whenever you like.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" data-act="demo-load">${icon('spark')} Load demo data</button>
+          <button class="btn" data-act="go" data-to="dashboard">${icon('eye')} Preview dashboard</button>
+        </div>
+      </div>
+      <div class="panel danger-zone">
+        <div class="panel-head"><div class="card-title">Clear all data</div></div>
+        <p class="sm mut" style="line-height:1.65;margin-bottom:10px">Removes <b>every</b> entry: debts, payments, money plan, funds, scores, wins and milestones. Type <b>CLEAR</b> below to unlock the button — a confirmation step will ask you once more.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input class="in" style="width:130px" placeholder="Type CLEAR" data-inp="clear-check" id="clearInput" autocomplete="off">
+          <button class="btn armed" id="clearBtn" data-act="clear-all" disabled>${icon('trash')} Clear all data</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="card-title">How this tracker connects</div></div>
+        <div class="statline"><span>My Debts</span><b>feeds plan · dashboard · milestones</b></div>
+        <div class="statline"><span>Payments</span><b>lower balances · move every chart</b></div>
+        <div class="statline"><span>Money Plan</span><b>sets the Payoff Plan budget</b></div>
+        <div class="statline"><span>Payoff Plan</span><b>projects every payoff date</b></div>
+        <div class="statline"><span>Emergency Fund</span><b>protects the plan · dashboard</b></div>
+        <div class="statline"><span>Milestones</span><b>unlock automatically from data</b></div>
+        <div class="sm mut" style="margin-top:10px;line-height:1.6">One system, thirteen views — change a number anywhere and the whole journey recalculates.</div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="card-title">About this planner</div></div>
+        <div class="statline"><span>Storage used</span><b>${(bytes/1024).toFixed(1)} KB</b></div>
+        <div class="statline"><span>Data location</span><b>this browser only</b></div>
+        <div class="statline"><span>Sections</span><b>13</b></div>
+        <div class="statline"><span>Version</span><b>1.0</b></div>
+        <div class="sm mut" style="margin-top:10px;line-height:1.6">Debt Payoff Tracker is an original HTML web app — it runs entirely offline, needs no account, and never sends your numbers anywhere.</div>
+      </div>
+      <a class="lacasa-card" href="https://lacasaprint.etsy.com" target="_blank" rel="noopener noreferrer" aria-label="Created by LaCasaPrint — visit the LaCasaPrint Etsy shop">
+        <div class="lc-by">Created by</div>
+        <div class="lc-name">La<em>Casa</em>Print</div>
+        <div class="lc-sub">Planners &amp; printables — crafted with care</div>
+        <div class="lc-hand">visit the shop ↗ lacasaprint.etsy.com</div>
+      </a>
+    </div>`;
+};
+CHG['set-name'] = el2 => { db.settings.name = el2.value.trim(); save(); toast('Saved'); };
+CHG['set-cur']  = el2 => { db.settings.cur = el2.value; save(); renderView(); toast('Currency updated'); };
+INP['clear-check'] = el2 => {
+  const btn = $('clearBtn');
+  if(btn) btn.disabled = el2.value.trim().toUpperCase() !== 'CLEAR';
+};
+ACT['clear-all'] = () => {
+  const v = ($('clearInput')||{}).value || '';
+  if(v.trim().toUpperCase() !== 'CLEAR'){ toast('Type CLEAR first'); return; }
+  confirmModal('Final confirmation',
+    'This is the last step. <b>All user-entered data will be permanently removed</b> from this browser — debts, payments, plans, everything. Settings like your name, currency and mood will be kept.',
+    'Yes, delete everything', 'clear-yes');
+};
+ACT['clear-yes'] = () => {
+  const keep = db.settings;
+  db = defaultDB();
+  db.settings = keep;
+  save(); closeModal(); go('dashboard'); toast('All data cleared — a fresh start 🌱');
+};
+ACT['demo-load'] = () => {
+  const hasData = db.debts.length || db.payments.length;
+  confirmModal('Load demo data?',
+    (hasData ? 'Your <b>current entries will be replaced</b> by the sample dataset. ' : '')
+    + 'A realistic set of debts, payments, money plan, funds, scores and wins will be loaded so you can explore every section.',
+    'Load demo data', 'demo-load-yes');
+};
+ACT['demo-load-yes'] = () => {
+  db = demoData();
+  document.documentElement.dataset.theme = db.settings.mood;
+  $$('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.themeSet === db.settings.mood));
+  save(); closeModal(); go('dashboard'); toast('Demo data loaded — have a look around 🌅');
+};
+ACT['export-data'] = () => {
+  try{
+    const blob = new Blob([JSON.stringify(db, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'debt-payoff-tracker-backup.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1500);
+    toast('Backup downloaded — keep it somewhere safe');
+  }catch(e){ toast('Export failed — your browser blocked the download'); }
+};
+CHG['import-data'] = el2 => {
+  const file = el2.files && el2.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.debts)) throw new Error('bad file');
+      db = normalizeDB(parsed);
+      document.documentElement.dataset.theme = db.settings.mood || 'sunrise';
+      $$('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.themeSet === (db.settings.mood||'sunrise')));
+      save(); go('dashboard'); toast('Data imported — welcome back');
+    }catch(e){ toast('That file does not look like a tracker backup'); }
+  };
+  reader.readAsText(file);
+  el2.value = '';
+};
+
+/* ============================================================
+   INIT
+   ============================================================ */
+(function init(){
+  load();
+  document.documentElement.dataset.theme = db.settings.mood || 'sunrise';
+  $$('.theme-dot').forEach(d => d.classList.toggle('active', d.dataset.themeSet === (db.settings.mood||'sunrise')));
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  $('mastDate').textContent = days[TODAY.getDay()]+' · '+fmtDateY(todayIso());
+  save();
+  go('dashboard');
+})();
+</script>
+</body>
+</html>
